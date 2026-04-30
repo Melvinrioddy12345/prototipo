@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía Universitaria Sucre</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<style>
+:root {
+  --cream:     #F5EFE0;
+  --parchment: #EDE0C4;
+  --clay:      #A0522D;
+  --terracota: #C1440E;
+  --gold:      #C49A22;
+  --dark:      #1E1510;
+  --ink:       #3D2B1F;
+  --muted:     #7A6552;
+  --white:     #FDFAF4;
+  --shadow:    rgba(30,21,16,.15);
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+body {
+  font-family:'Lato',sans-serif;
+  background-color:var(--cream);
+  color:var(--ink);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* fondo ornamental solo para secciones interiores */
+body::before {
+  content:'';position:fixed;inset:0;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 15% 10%,rgba(196,154,34,.08) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 80% at 85% 90%,rgba(193,68,14,.07) 0%,transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='1' fill='%23A0522D' fill-opacity='.07'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ══════════════════════════════════════════
+   PANTALLA INICIO — FONDO PANORAMA
+══════════════════════════════════════════ */
+#inicio {
+  position:relative;
+  z-index:1;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:40px 20px;
+
+  /* Imagen de fondo */
+  background-image: url('panorama.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Overlay oscuro sobre la foto para que el texto sea legible */
+#inicio::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background: linear-gradient(
+    to bottom,
+    rgba(10,6,3,.55) 0%,
+    rgba(20,12,6,.70) 50%,
+    rgba(10,6,3,.80) 100%
+  );
+  z-index:0;
+}
+
+/* Todo el contenido del inicio va por encima del overlay */
+#inicio > * { position:relative; z-index:1; }
+
+/* Ajuste de colores para el inicio (texto sobre foto oscura) */
+#inicio .inicio-titulo  { color:#F5EFE0; text-shadow:0 2px 12px rgba(0,0,0,.5); }
+#inicio .inicio-subtitulo { color:rgba(237,224,196,.75); }
+#inicio .inicio-pregunta  { color:rgba(237,224,196,.8); }
+#inicio .inicio-tag       { color:rgba(237,224,196,.5); }
+#inicio .divider-gold::before,
+#inicio .divider-gold::after { background:linear-gradient(90deg,transparent,rgba(196,154,34,.7),transparent); }
+#inicio .divider-gold span { color:var(--gold); }
+
+/* ── SELECTOR DE IDIOMA ── */
+.idioma-selector {
+  position:absolute;
+  top:20px;
+  right:24px;
+  z-index:10;
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.idioma-btn {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 14px;
+  border-radius:20px;
+  border:1.5px solid rgba(237,224,196,.3);
+  background:rgba(10,6,3,.45);
+  backdrop-filter:blur(6px);
+  color:rgba(237,224,196,.75);
+  font-family:'Lato',sans-serif;
+  font-size:.72rem;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:all .2s;
+}
+.idioma-btn:hover {
+  border-color:var(--gold);
+  color:var(--gold);
+  background:rgba(10,6,3,.6);
+}
+.idioma-btn.activo {
+  border-color:var(--gold);
+  color:var(--gold);
+  background:rgba(196,154,34,.15);
+}
+.idioma-btn .bandera { font-size:1.1rem; line-height:1; }
+
+/* ── ESCUDO ── */
+.inicio-escudo {
+  width:80px;height:80px;border-radius:50%;
+  background:rgba(10,6,3,.6);
+  border:2px solid rgba(196,154,34,.4);
+  display:inline-flex;align-items:center;justify-content:center;
+  margin-bottom:20px;
+  box-shadow:0 6px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(4px);
+}
+.inicio-escudo svg{width:38px;height:38px;fill:var(--gold)}
+
+.inicio-titulo {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2rem,6vw,3.8rem);
+  font-weight:700;line-height:1.15;letter-spacing:-0.5px;text-align:center;
+}
+.inicio-subtitulo {
+  font-size:clamp(.85rem,2.5vw,1.05rem);font-weight:300;
+  letter-spacing:3px;text-transform:uppercase;margin-top:10px;
+  text-align:center;
+}
+
+.divider-gold {
+  display:flex;align-items:center;gap:12px;
+  margin:28px auto;width:280px;
+}
+.divider-gold::before,.divider-gold::after {
+  content:'';flex:1;height:1px;
+}
+.divider-gold span{font-size:18px}
+
+.inicio-pregunta {
+  font-size:clamp(.95rem,2.5vw,1.1rem);
+  text-align:center;margin-bottom:32px;
+}
+
+/* ── GRID DE BOTONES ── */
+.botones-grid {
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:14px;max-width:560px;width:100%;
+}
+.boton {
+  padding:16px 20px;
+  font-family:'Lato',sans-serif;font-size:.85rem;
+  font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  border:none;border-radius:var(--radius-sm);
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:transform .25s,box-shadow .25s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  backdrop-filter:blur(4px);
+}
+.boton::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.12);opacity:0;transition:opacity .25s}
+.boton:hover::after{opacity:1}
+.boton:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(0,0,0,.4)}
+.boton:active{transform:translateY(0)}
+.boton svg{width:20px;height:20px;flex-shrink:0}
+.boton-publica  {background:rgba(30,21,16,.85); color:var(--gold);  border:1px solid rgba(196,154,34,.3); box-shadow:0 6px 20px rgba(0,0,0,.35)}
+.boton-privada  {background:rgba(193,68,14,.85); color:var(--white); border:1px solid rgba(255,255,255,.1);  box-shadow:0 6px 20px rgba(193,68,14,.4)}
+.boton-buscador {background:rgba(160,82,45,.85); color:var(--white); border:1px solid rgba(255,255,255,.1);  box-shadow:0 6px 20px rgba(160,82,45,.4)}
+.boton-mapa     {background:rgba(196,154,34,.9); color:var(--dark);  border:1px solid rgba(255,255,255,.1);  box-shadow:0 6px 20px rgba(196,154,34,.4)}
+
+.inicio-tag{
+  margin-top:40px;font-size:.7rem;letter-spacing:2.5px;
+  text-transform:uppercase;text-align:center;
+}
+
+/* ══════════════════════════════════════════
+   CONTENIDO (secciones interiores)
+══════════════════════════════════════════ */
+#contenido {
+  position:relative;z-index:1;
+  max-width:1100px;margin:0 auto;
+  padding:32px 20px 60px;
+  animation:fadeUp .5s ease both;
+  display:none;
+}
+.volver {
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 22px;background:transparent;
+  border:1.5px solid var(--clay);color:var(--clay);
+  border-radius:var(--radius-sm);
+  font-family:'Lato',sans-serif;font-size:.85rem;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;
+  cursor:pointer;transition:background .2s,color .2s;margin-bottom:32px;
+}
+.volver:hover{background:var(--clay);color:var(--white)}
+.seccion-titulo{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,4vw,2.4rem);color:var(--dark);margin-bottom:6px}
+.seccion-badge{display:inline-block;padding:3px 14px;border-radius:20px;font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:32px}
+.badge-publica  {background:rgba(30,21,16,.08); color:var(--dark)}
+.badge-privada  {background:rgba(193,68,14,.1); color:var(--terracota)}
+.badge-buscador {background:rgba(160,82,45,.1); color:var(--clay)}
+.badge-mapa     {background:rgba(196,154,34,.15);color:#7a5c00}
+
+/* ══════════════════════════════════════════
+   CARDS UNIVERSIDADES
+══════════════════════════════════════════ */
+.card{background:var(--white);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:32px;box-shadow:0 4px 24px var(--shadow);border-top:4px solid;transition:box-shadow .3s,transform .3s}
+.card:hover{box-shadow:0 16px 48px rgba(30,21,16,.18);transform:translateY(-4px)}
+.card-header{display:flex;align-items:center;gap:18px;padding:28px 28px 20px;border-bottom:1px solid rgba(30,21,16,.07);flex-wrap:wrap}
+.logo{width:56px;height:56px;object-fit:contain;border-radius:var(--radius-sm);flex-shrink:0}
+.logo-fallback{width:56px;height:56px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:white;flex-shrink:0}
+.card-info{flex:1;min-width:0}
+.card-nombre{font-family:'Playfair Display',serif;font-size:clamp(1rem,2.5vw,1.25rem);font-weight:700;color:var(--dark);line-height:1.25}
+.card-sigla{display:inline-block;margin-top:6px;padding:3px 12px;border-radius:20px;font-size:.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:white}
+.card-tipo{font-size:.68rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:700;padding:6px 14px;border:1px solid var(--parchment);border-radius:20px;flex-shrink:0}
+.card-body{display:grid;grid-template-columns:1fr 300px}
+.card-facultades{padding:24px 28px}
+.facultad{margin-bottom:8px}
+.facultad-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--radius-sm);cursor:pointer;transition:background .2s;background:rgba(30,21,16,.03)}
+.facultad-header:hover{background:rgba(30,21,16,.07)}
+.fac-icon{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.fac-nombre{font-size:.88rem;font-weight:700;color:var(--ink);flex:1;line-height:1.35}
+.fac-chevron{width:16px;height:16px;flex-shrink:0;color:var(--muted);transition:transform .25s}
+.facultad.open .fac-chevron{transform:rotate(180deg)}
+.carreras{display:none;padding:8px 16px 12px 34px;list-style:none;border-left:2px solid var(--parchment);margin:4px 0 4px 20px}
+.carreras li{font-size:.82rem;color:var(--muted);padding:5px 0;border-bottom:1px dashed rgba(30,21,16,.07);display:flex;align-items:center;gap:8px}
+.carreras li::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.carreras li:last-child{border-bottom:none}
+.card-imagen-wrap{position:relative;overflow:hidden;min-height:260px}
+.card-imagen-wrap::before{content:'';position:absolute;inset:0;background:linear-gradient(to right,var(--white) 0%,transparent 30%);z-index:1;pointer-events:none}
+.imagen{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease}
+.card:hover .imagen{transform:scale(1.04)}
+.card-stats{display:flex;gap:20px;padding:16px 28px;border-top:1px solid rgba(30,21,16,.07);background:rgba(30,21,16,.02)}
+.stat{text-align:center}
+.stat-num{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--dark);line-height:1}
+.stat-label{font-size:.65rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:2px}
+
+/* ══════════════════════════════════════════
+   BUSCADOR
+══════════════════════════════════════════ */
+.buscador-wrap{position:relative;margin-bottom:24px}
+.buscador-input{width:100%;padding:18px 56px 18px 24px;font-family:'Lato',sans-serif;font-size:1rem;color:var(--ink);background:var(--white);border:2px solid var(--parchment);border-radius:var(--radius-md);outline:none;transition:border-color .2s,box-shadow .2s;box-shadow:0 4px 16px var(--shadow)}
+.buscador-input:focus{border-color:var(--clay);box-shadow:0 4px 24px rgba(160,82,45,.15)}
+.buscador-input::placeholder{color:var(--muted)}
+.buscador-icon{position:absolute;right:20px;top:50%;transform:translateY(-50%);pointer-events:none}
+.buscador-icon svg{width:22px;height:22px;fill:var(--clay)}
+.busqueda-stats{font-size:.82rem;color:var(--muted);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.busqueda-num{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--clay);font-weight:700}
+.resultados-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.resultado-card{background:var(--white);border-radius:var(--radius-md);padding:20px;border-left:4px solid;box-shadow:0 4px 16px var(--shadow);display:flex;align-items:flex-start;gap:16px;transition:transform .2s,box-shadow .2s;animation:fadeUp .3s ease both}
+.resultado-card:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(30,21,16,.15)}
+.res-logo{width:44px;height:44px;object-fit:contain;border-radius:var(--radius-sm);flex-shrink:0}
+.res-logo-fb{width:44px;height:44px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:white;flex-shrink:0}
+.res-info{flex:1;min-width:0}
+.res-carrera{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--dark);line-height:1.3;margin-bottom:6px}
+.res-uni{font-size:.8rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.res-sigla{display:inline-block;margin-top:6px;padding:2px 10px;border-radius:20px;font-size:.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:white}
+.res-fac{font-size:.72rem;color:var(--muted);margin-top:4px;font-style:italic;line-height:1.3}
+.busqueda-vacia,.busqueda-inicio{text-align:center;padding:60px 20px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:12px}
+.busqueda-vacia svg,.busqueda-inicio svg{width:48px;height:48px;fill:var(--parchment)}
+.busqueda-vacia p,.busqueda-inicio p{font-size:1rem}
+.busqueda-vacia small,.busqueda-inicio small{font-size:.8rem;opacity:.7}
+
+/* ══════════════════════════════════════════
+   MAPA
+══════════════════════════════════════════ */
+.mapa-layout{display:grid;grid-template-columns:1fr 340px;border-radius:var(--radius-lg);overflow:hidden;box-shadow:0 8px 40px var(--shadow);border:1px solid var(--parchment);min-height:520px}
+#map{height:520px;width:100%;z-index:0}
+.mapa-panel{background:var(--white);border-left:1px solid var(--parchment);display:flex;flex-direction:column}
+.mapa-panel-header{padding:24px 24px 16px;border-bottom:1px solid var(--parchment)}
+.mapa-panel-header h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--dark)}
+.mapa-panel-header p{font-size:.78rem;color:var(--muted);margin-top:4px}
+.mapa-uni-lista{padding:12px;border-bottom:1px solid var(--parchment);display:flex;flex-direction:column;gap:6px}
+.mapa-uni-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:background .2s;border:1.5px solid transparent}
+.mapa-uni-item:hover{background:rgba(30,21,16,.04)}
+.mapa-uni-item.activo{background:var(--cream);border-color:var(--parchment)}
+.mapa-uni-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.mapa-uni-nombre{font-size:.82rem;font-weight:700;color:var(--ink);flex:1}
+.mapa-uni-tipo{font-size:.65rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.mapa-info{padding:20px 24px;flex:1;overflow-y:auto}
+.mapa-info-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;color:var(--muted);gap:12px}
+.mapa-info-placeholder svg{width:40px;height:40px;fill:var(--parchment)}
+.mapa-info-placeholder p{font-size:.85rem}
+.mapa-info-uni{display:none}
+.mapa-info-uni.visible{display:block;animation:fadeUp .3s ease both}
+.mapa-info-nombre{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--dark);margin-bottom:4px;line-height:1.25}
+.mapa-info-sigla{display:inline-block;padding:2px 12px;border-radius:20px;font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:white;margin-bottom:14px}
+.mapa-info-fila{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed rgba(30,21,16,.08);font-size:.82rem}
+.mapa-info-fila:last-child{border-bottom:none}
+.mapa-info-label{color:var(--muted)}
+.mapa-info-valor{font-weight:700;color:var(--ink);text-align:right}
+.marker-custom{width:50px;height:50px;border-radius:50%;border:3px solid white;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.35);cursor:pointer}
+.marker-custom img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media(max-width:900px){
+  .mapa-layout{grid-template-columns:1fr}
+  .mapa-panel{border-left:none;border-top:1px solid var(--parchment)}
+  #map{height:320px}
+}
+@media(max-width:768px){
+  .card-body{grid-template-columns:1fr}
+  .card-imagen-wrap{min-height:200px;order:-1}
+  .card-imagen-wrap::before{background:linear-gradient(to bottom,transparent 60%,var(--white))}
+  .botones-grid{grid-template-columns:1fr;max-width:300px}
+  .resultados-grid{grid-template-columns:1fr}
+  .mapa-uni-lista{flex-direction:row;flex-wrap:wrap;padding:8px}
+  .mapa-uni-item{flex:1;min-width:120px}
+  .idioma-selector{top:12px;right:12px;gap:5px}
+  .idioma-btn{padding:5px 10px;font-size:.65rem}
+}
+
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--parchment)}
+::-webkit-scrollbar-thumb{background:var(--clay);border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- ══════════ INICIO ══════════ -->
+<div id="inicio">
+
+  <!-- SELECTOR DE IDIOMA -->
+  <div class="idioma-selector">
+    <button class="idioma-btn activo" onclick="setIdioma('es')" id="btn-es">
+      <span class="bandera">🇧🇴</span> ES
+    </button>
+    <button class="idioma-btn" onclick="setIdioma('en')" id="btn-en">
+      <span class="bandera">🇬🇧</span> EN
+    </button>
+    <button class="idioma-btn" onclick="setIdioma('pt')" id="btn-pt">
+      <span class="bandera">🇧🇷</span> PT
+    </button>
+  </div>
+
+  <div style="text-align:center">
+    <div class="inicio-escudo">
+      <svg viewBox="0 0 24 24"><path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.35C16.5 22.15 20 17.25 20 12V6L12 2zm0 2.18l6 2.7V12c0 4.22-2.8 8.2-6 9.49C8.8 20.2 6 16.22 6 12V6.88l6-2.7zM11 7v2H9v2h2v2h2v-2h2v-2h-2V7h-2z"/></svg>
+    </div>
+    <h1 class="inicio-titulo" id="txt-titulo">Guía Universitaria<br>de Sucre</h1>
+    <p class="inicio-subtitulo" id="txt-subtitulo">Capital Constitucional de Bolivia</p>
+  </div>
+
+  <div class="divider-gold"><span>✦</span></div>
+  <p class="inicio-pregunta" id="txt-pregunta">¿Qué deseas explorar?</p>
+
+  <div class="botones-grid">
+    <button class="boton boton-publica" onclick="filtrar('publica')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l4 2.18V17h2v-4.82l2 1.09V17c0 1.66 2.69 3 6 3s6-1.34 6-3v-3.73l2-1.09L23 9 12 3z"/></svg>
+      <span id="txt-btn-publica">Públicas</span>
+    </button>
+    <button class="boton boton-privada" onclick="filtrar('privada')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 11c.34 0 .67.03 1 .08V6h-1V4h-2v2H9V4H7v2H6v14h5.68A7 7 0 1017 11zm0 12a5 5 0 110-10 5 5 0 010 10z"/></svg>
+      <span id="txt-btn-privada">Privadas</span>
+    </button>
+    <button class="boton boton-buscador" onclick="mostrarBuscador()">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <span id="txt-btn-buscador">Buscador de Carreras</span>
+    </button>
+    <button class="boton boton-mapa" onclick="mostrarMapa()">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      <span id="txt-btn-mapa">Mapa de Ubicaciones</span>
+    </button>
+  </div>
+
+  <p class="inicio-tag" id="txt-tag">Sucre · Bolivia · Educación Superior</p>
+</div>
+
+<!-- ══════════ CONTENIDO ══════════ -->
+<div id="contenido"></div>
+
+<script>
+/* ═══════════════════════════════════
+   TRADUCCIONES
+═══════════════════════════════════ */
+const i18n = {
+  es: {
+    titulo:       "Guía Universitaria<br>de Sucre",
+    subtitulo:    "Capital Constitucional de Bolivia",
+    pregunta:     "¿Qué deseas explorar?",
+    btnPublica:   "Públicas",
+    btnPrivada:   "Privadas",
+    btnBuscador:  "Buscador de Carreras",
+    btnMapa:      "Mapa de Ubicaciones",
+    tag:          "Sucre · Bolivia · Educación Superior",
+    // secciones
+    tituloPublica:   "Universidades Públicas",
+    tituloPrivada:   "Universidades Privadas",
+    tituloBuscador:  "Buscador de Carreras",
+    tituloMapa:      "Mapa de Universidades",
+    volver:          "Volver",
+    publica:         "Pública",
+    privada:         "Privada",
+    facultades:      "Facultades",
+    carreras:        "Carreras",
+    placeholder:     "Ej: Medicina, Ingeniería de Sistemas, Derecho...",
+    mostrando:       "Mostrando",
+    resultados:      "resultados",
+    sinResultados:   "Sin resultados para esa búsqueda",
+    intentaOtro:     "Intenta con otro término",
+    buscarTexto:     "Busca cualquier carrera disponible en Sucre",
+    buscarSub:       "Ingeniería · Medicina · Derecho · Arquitectura · y muchas más",
+    seleccionaUni:   "Selecciona una universidad",
+    clickMarcador:   "Clic en marcador o en la lista",
+    unisSucre:       "Universidades en Sucre",
+    tipo:            "Tipo",
+    ranking:         "Ranking",
+    coords:          "Coords.",
+    instituciones:   "instituciones",
+  },
+  en: {
+    titulo:       "University Guide<br>of Sucre",
+    subtitulo:    "Constitutional Capital of Bolivia",
+    pregunta:     "What would you like to explore?",
+    btnPublica:   "Public",
+    btnPrivada:   "Private",
+    btnBuscador:  "Program Search",
+    btnMapa:      "Location Map",
+    tag:          "Sucre · Bolivia · Higher Education",
+    tituloPublica:   "Public Universities",
+    tituloPrivada:   "Private Universities",
+    tituloBuscador:  "Program Search",
+    tituloMapa:      "University Map",
+    volver:          "Back",
+    publica:         "Public",
+    privada:         "Private",
+    facultades:      "Faculties",
+    carreras:        "Programs",
+    placeholder:     "E.g.: Medicine, Systems Engineering, Law...",
+    mostrando:       "Showing",
+    resultados:      "results",
+    sinResultados:   "No results found",
+    intentaOtro:     "Try a different search term",
+    buscarTexto:     "Search any program available in Sucre",
+    buscarSub:       "Engineering · Medicine · Law · Architecture · and many more",
+    seleccionaUni:   "Select a university",
+    clickMarcador:   "Click a marker or a list item",
+    unisSucre:       "Universities in Sucre",
+    tipo:            "Type",
+    ranking:         "Ranking",
+    coords:          "Coords.",
+    instituciones:   "institutions",
+  },
+  pt: {
+    titulo:       "Guia Universitário<br>de Sucre",
+    subtitulo:    "Capital Constitucional da Bolívia",
+    pregunta:     "O que você deseja explorar?",
+    btnPublica:   "Públicas",
+    btnPrivada:   "Privadas",
+    btnBuscador:  "Busca de Cursos",
+    btnMapa:      "Mapa de Locais",
+    tag:          "Sucre · Bolívia · Ensino Superior",
+    tituloPublica:   "Universidades Públicas",
+    tituloPrivada:   "Universidades Privadas",
+    tituloBuscador:  "Busca de Cursos",
+    tituloMapa:      "Mapa das Universidades",
+    volver:          "Voltar",
+    publica:         "Pública",
+    privada:         "Privada",
+    facultades:      "Faculdades",
+    carreras:        "Cursos",
+    placeholder:     "Ex: Medicina, Engenharia de Sistemas, Direito...",
+    mostrando:       "Mostrando",
+    resultados:      "resultados",
+    sinResultados:   "Nenhum resultado encontrado",
+    intentaOtro:     "Tente outro termo",
+    buscarTexto:     "Pesquise qualquer curso disponível em Sucre",
+    buscarSub:       "Engenharia · Medicina · Direito · Arquitetura · e muito mais",
+    seleccionaUni:   "Selecione uma universidade",
+    clickMarcador:   "Clique em um marcador ou na lista",
+    unisSucre:       "Universidades em Sucre",
+    tipo:            "Tipo",
+    ranking:         "Ranking",
+    coords:          "Coords.",
+    instituciones:   "instituições",
+  }
+};
+
+let idiomaActual = 'es';
+
+function setIdioma(lang) {
+  idiomaActual = lang;
+  const t = i18n[lang];
+
+  document.getElementById("txt-titulo").innerHTML    = t.titulo;
+  document.getElementById("txt-subtitulo").textContent = t.subtitulo;
+  document.getElementById("txt-pregunta").textContent  = t.pregunta;
+  document.getElementById("txt-btn-publica").textContent  = t.btnPublica;
+  document.getElementById("txt-btn-privada").textContent  = t.btnPrivada;
+  document.getElementById("txt-btn-buscador").textContent = t.btnBuscador;
+  document.getElementById("txt-btn-mapa").textContent     = t.btnMapa;
+  document.getElementById("txt-tag").textContent          = t.tag;
+
+  // resaltar botón activo
+  ['es','en','pt'].forEach(l => {
+    document.getElementById("btn-"+l).classList.toggle("activo", l === lang);
+  });
+}
+
+function t(key) { return i18n[idiomaActual][key] || key; }
+
+/* ═══════════════════════════════════
+   DATOS
+═══════════════════════════════════ */
+const universidades = [
+  {
+    nombre:"Universidad Real y Pontificia de San Francisco Xavier de Chuquisaca",
+    sigla:"USFX", tipo:"publica", color:"#C62828",
+    logo:"escusfx.png", imagen:"usfx.jpg",
+    coords:[-19.047162,-65.261225], ranking:1,
+    facultades:[
+      {nombre:"Facultad de Derecho, Ciencias Políticas y Sociales",carreras:["Derecho","Ciencias de la Comunicación Social","Sociología","Historia","Comunicación Social y Medios Digitales"]},
+      {nombre:"Facultad de Humanidades y Ciencias de la Educación",carreras:["Idiomas","Turismo","Pedagogía","Psicología","Trabajo Social","Turismo, Hotelería y Gestión Cultural"]},
+      {nombre:"Facultad de Medicina",carreras:["Medicina"]},
+      {nombre:"Facultad de Ciencias Químico Farmacéuticas y Bioquímicas",carreras:["Farmacia y Bioquímica","Bioquímica","Química Farmacéutica","Biología"]},
+      {nombre:"Facultad de Ciencias y Tecnologías de la Salud",carreras:["Fisioterapia y Kinesiología","Bio-imagenología","Nutrición y Dietética"]},
+      {nombre:"Facultad de Odontología",carreras:["Odontología"]},
+      {nombre:"Facultad de Ciencias de Enfermería y Obstetricia",carreras:["Enfermería"]},
+      {nombre:"Facultad de Ciencias y Tecnología",carreras:["Ingeniería Química","Ingeniería de Sistemas","Ingeniería de Alimentos","Ingeniería Industrial","Ingeniería Ambiental","Ingeniería en Telecomunicaciones","Ingeniería de Petróleo y Gas Natural","Ingeniería en Diseño y Animación Digital","Ingeniería en Ciencias de la Computación","Ingeniería en Tecnologías de la Información y Seguridad","Ingeniería en Biotecnología","Ingeniería en Ciberseguridad"]},
+      {nombre:"Facultad de Ingeniería Civil",carreras:["Ingeniería Civil","Ingeniería Geológica"]},
+      {nombre:"Facultad de Arquitectura",carreras:["Arquitectura","Diseño de Interiores","Arte y Diseño Gráfico"]},
+      {nombre:"Facultad de Ciencias Agrarias",carreras:["Ingeniería Agronómica","Ingeniería en Desarrollo Rural","Ingeniería en Recursos Naturales"]},
+      {nombre:"Facultad de Ingeniería y Ciencias Aplicadas Meca-Electrónicas",carreras:["Ingeniería Mecánica","Ingeniería Electromecánica","Ingeniería Eléctrica","Ingeniería Electrónica","Ingeniería Mecatrónica","Ingeniería Biomédica"]},
+      {nombre:"Facultad de Ciencias Económicas y Empresariales",carreras:["Administración de Empresas","Economía","Ingeniería Comercial","Gestión Pública","Gestión y Gerencia de Negocios","Gerencia y Administración Pública"]},
+      {nombre:"Facultad de Contaduría Pública y Ciencias Financieras",carreras:["Contaduría Pública","Administración Financiera","Comercio Exterior y Aduanas","Ingeniería Financiera","Comercio Internacional"]}
+    ]
+  },
+  {
+    nombre:"Universidad del Valle", sigla:"UNIVALLE", tipo:"privada", color:"#4B0082",
+    logo:"escunivalle.png", imagen:"univalle.jpg",
+    coords:[-19.027458,-65.259722], ranking:4,
+    facultades:[
+      {nombre:"Facultad de Tecnología",carreras:["Ingeniería Civil"]},
+      {nombre:"Facultad de Informática y Electrónica",carreras:["Ingeniería de Sistemas Informáticos"]},
+      {nombre:"Facultad de Arquitectura, Urbanismo y Diseño",carreras:["Arquitectura y Urbanismo"]},
+      {nombre:"Facultad de Ciencias Empresariales y Sociales",carreras:["Ingeniería Comercial","Ingeniería en Comercio Internacional","Derecho","Administración de Empresas","Psicología"]}
+    ]
+  },
+  {
+    nombre:"Universidad Privada Domingo Savio", sigla:"UPDS", tipo:"privada", color:"#0A1F44",
+    logo:"escupds.png", imagen:"upds.jpg",
+    coords:[-19.058091,-65.254682], ranking:3,
+    facultades:[
+      {nombre:"Facultad de Ingenierías",carreras:["Ingeniería Industrial","Ingeniería en Redes y Telecomunicaciones","Ingeniería de Sistemas","Ingeniería en Gestión Petrolera","Ingeniería Ambiental"]},
+      {nombre:"Facultad de Ciencias Jurídicas y Sociales",carreras:["Derecho","Psicología"]},
+      {nombre:"Facultad de Ciencias Empresariales",carreras:["Administración de Empresas","Ingeniería Comercial","Marketing y Publicidad","Contaduría Pública"]},
+      {nombre:"Facultad de Ciencias de la Salud",carreras:["Medicina","Kinesiología y Fisioterapia"]}
+    ]
+  },
+  {
+    nombre:"Universidad Boliviana de Informática", sigla:"UBI", tipo:"privada", color:"#00838F",
+    logo:"escubi.png", imagen:"ubi.jpg",
+    coords:[-19.042251,-65.255473], ranking:5,
+    facultades:[
+      {nombre:"Carreras",carreras:["Arquitectura y Urbanismo","Ingeniería de Software y Multimedia","Ingeniería Comercial y Empresarial","Ingeniería de Hardware y Robótica","Contaduría Pública y Auditoría Forense","Derecho","Medicina","Ingeniería Civil","Trabajo Social","Ingeniería de Sistemas TIC"]}
+    ]
+  },
+  {
+    nombre:"Universidad Católica Boliviana", sigla:"UCB", tipo:"privada", color:"#B8860B",
+    logo:"escucb.png", imagen:"ucb.jpg",
+    coords:[-19.049400,-65.260236], ranking:2,
+    facultades:[
+      {nombre:"Carreras",carreras:["Administración de Empresas","Ingeniería de Sistemas","Medicina","Derecho"]}
+    ]
+  }
+];
+
+/* índice búsqueda */
+const indiceCarreras = [];
+universidades.forEach(u => {
+  u.facultades.forEach(f => {
+    f.carreras.forEach(c => indiceCarreras.push({carrera:c, facultad:f.nombre, universidad:u}));
+  });
+});
+
+let contadorGlobal = 0;
+let mapInstance = null;
+
+/* ═══════════════════════════════════
+   HELPERS
+═══════════════════════════════════ */
+function volver() {
+  document.getElementById("contenido").innerHTML = "";
+  document.getElementById("contenido").style.display = "none";
+  document.getElementById("inicio").style.display = "flex";
+  mapInstance = null;
+}
+
+function initContenido(tituloHTML, badgeHTML) {
+  document.getElementById("inicio").style.display = "none";
+  const cont = document.getElementById("contenido");
+  cont.style.display = "block";
+  cont.innerHTML = `
+    <button class="volver" onclick="volver()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      ${t('volver')}
+    </button>
+    ${tituloHTML}
+    ${badgeHTML}`;
+  return cont;
+}
+
+/* ═══════════════════════════════════
+   MÓDULO: UNIVERSIDADES
+═══════════════════════════════════ */
+function filtrar(tipo) {
+  const lista = universidades.filter(u => u.tipo === tipo);
+  const totalCar = lista.reduce((s,u) => s + u.facultades.reduce((sf,f) => sf + f.carreras.length, 0), 0);
+  const titulo = tipo === 'publica' ? t('tituloPublica') : t('tituloPrivada');
+  const badge  = tipo === 'publica' ? 'badge-publica' : 'badge-privada';
+
+  const cont = initContenido(
+    `<h2 class="seccion-titulo">${titulo}</h2>`,
+    `<span class="seccion-badge ${badge}">${lista.length} ${t('instituciones')} · ${totalCar} ${t('carreras')}</span>`
+  );
+
+  lista.forEach((u, idx) => {
+    const numFac = u.facultades.length;
+    const numCar = u.facultades.reduce((s,f) => s + f.carreras.length, 0);
+    const card = document.createElement("div");
+    card.className = "card";
+    card.style.cssText = `border-top-color:${u.color};animation:fadeUp .5s ease ${idx*.1}s both`;
+
+    let facHTML = '';
+    u.facultades.forEach(f => {
+      contadorGlobal++;
+      const cid = contadorGlobal;
+      facHTML += `
+        <div class="facultad" id="wrap${cid}">
+          <div class="facultad-header" onclick="toggle(${cid})">
+            <span class="fac-icon" style="background:${u.color}"></span>
+            <span class="fac-nombre">${f.nombre}</span>
+            <svg class="fac-chevron" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+            </svg>
+          </div>
+          <ul class="carreras" id="fac${cid}" style="border-left-color:${u.color}40">
+            ${f.carreras.map(c=>`<li>${c}</li>`).join('')}
+          </ul>
+        </div>`;
+    });
+
+    const tipoLabel = tipo === 'publica' ? `🏛 ${t('publica')}` : `🏫 ${t('privada')}`;
+
+    card.innerHTML = `
+      <div class="card-header">
+        <img src="${u.logo}" class="logo" alt="${u.sigla}"
+             onerror="this.outerHTML='<div class=\\'logo-fallback\\' style=\\'background:${u.color}\\'>${u.sigla.charAt(0)}</div>'">
+        <div class="card-info">
+          <div class="card-nombre">${u.nombre}</div>
+          <span class="card-sigla" style="background:${u.color}">${u.sigla}</span>
+        </div>
+        <span class="card-tipo">${tipoLabel}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-facultades">${facHTML}</div>
+        <div class="card-imagen-wrap">
+          <img src="${u.imagen}" class="imagen" alt="${u.nombre}" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="card-stats">
+        <div class="stat"><div class="stat-num">${numFac}</div><div class="stat-label">${t('facultades')}</div></div>
+        <div class="stat"><div class="stat-num">${numCar}</div><div class="stat-label">${t('carreras')}</div></div>
+      </div>`;
+    cont.appendChild(card);
+  });
+}
+
+function toggle(id) {
+  const el = document.getElementById("fac"+id);
+  const wrap = document.getElementById("wrap"+id);
+  const open = el.style.display === "block";
+  el.style.display = open ? "none" : "block";
+  wrap.classList.toggle("open", !open);
+}
+
+/* ═══════════════════════════════════
+   MÓDULO: BUSCADOR
+═══════════════════════════════════ */
+function mostrarBuscador() {
+  const cont = initContenido(
+    `<h2 class="seccion-titulo">${t('tituloBuscador')}</h2>`,
+    `<span class="seccion-badge badge-buscador">${indiceCarreras.length} ${t('carreras')} · ${universidades.length} ${t('instituciones')}</span>`
+  );
+
+  const wrap = document.createElement("div");
+  wrap.innerHTML = `
+    <div class="buscador-wrap">
+      <input class="buscador-input" type="text" id="inputBusqueda"
+             placeholder="${t('placeholder')}"
+             oninput="buscar(this.value)" autocomplete="off">
+      <span class="buscador-icon">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      </span>
+    </div>
+    <div class="busqueda-stats" id="busquedaStats" style="display:none">
+      ${t('mostrando')} <span class="busqueda-num" id="busquedaNum">0</span> ${t('resultados')}
+    </div>
+    <div id="resultadosGrid" class="resultados-grid"></div>
+    <div id="busquedaVacia" class="busqueda-vacia" style="display:none">
+      <svg viewBox="0 0 24 24"><path d="M11 15h2v2h-2v-2zm0-8h2v6h-2V7zm1-5C6.47 2 2 6.5 2 12a10 10 0 0010 10 10 10 0 0010-10A10 10 0 0012 2zm0 18a8 8 0 01-8-8 8 8 0 018-8 8 8 0 018 8 8 8 0 01-8 8z"/></svg>
+      <p>${t('sinResultados')}</p>
+      <small>${t('intentaOtro')}</small>
+    </div>
+    <div id="busquedaInicio" class="busqueda-inicio">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <p>${t('buscarTexto')}</p>
+      <small>${t('buscarSub')}</small>
+    </div>`;
+  cont.appendChild(wrap);
+  setTimeout(() => document.getElementById("inputBusqueda")?.focus(), 100);
+}
+
+function buscar(query) {
+  const grid = document.getElementById("resultadosGrid");
+  const vacia = document.getElementById("busquedaVacia");
+  const inicio = document.getElementById("busquedaInicio");
+  const statsWrap = document.getElementById("busquedaStats");
+  const statsNum = document.getElementById("busquedaNum");
+
+  const q = query.trim().toLowerCase();
+  grid.innerHTML = "";
+
+  if (!q) {
+    vacia.style.display = "none";
+    inicio.style.display = "flex";
+    statsWrap.style.display = "none";
+    return;
+  }
+  inicio.style.display = "none";
+
+  const resultados = indiceCarreras.filter(item =>
+    item.carrera.toLowerCase().includes(q) ||
+    item.facultad.toLowerCase().includes(q) ||
+    item.universidad.sigla.toLowerCase().includes(q) ||
+    item.universidad.nombre.toLowerCase().includes(q)
+  );
+
+  if (!resultados.length) {
+    vacia.style.display = "flex";
+    statsWrap.style.display = "none";
+    return;
+  }
+
+  vacia.style.display = "none";
+  statsWrap.style.display = "flex";
+  statsNum.textContent = resultados.length;
+
+  const regex = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+
+  resultados.forEach((item, idx) => {
+    const u = item.universidad;
+    const div = document.createElement("div");
+    div.className = "resultado-card";
+    div.style.cssText = `border-left-color:${u.color};animation-delay:${idx*.04}s`;
+
+    const carreraHL = item.carrera.replace(regex,'<mark style="background:rgba(196,154,34,.4);border-radius:3px;padding:0 2px">$1</mark>');
+
+    div.innerHTML = `
+      <img src="${u.logo}" class="res-logo" alt="${u.sigla}"
+           onerror="this.outerHTML='<div class=\\'res-logo-fb\\' style=\\'background:${u.color}\\'>${u.sigla.charAt(0)}</div>'">
+      <div class="res-info">
+        <div class="res-carrera">${carreraHL}</div>
+        <div class="res-uni">${u.nombre}</div>
+        <span class="res-sigla" style="background:${u.color}">${u.sigla}</span>
+        <div class="res-fac">${item.facultad}</div>
+      </div>`;
+    grid.appendChild(div);
+  });
+}
+
+/* ═══════════════════════════════════
+   MÓDULO: MAPA
+═══════════════════════════════════ */
+function mostrarMapa() {
+  const cont = initContenido(
+    `<h2 class="seccion-titulo">${t('tituloMapa')}</h2>`,
+    `<span class="seccion-badge badge-mapa">Sucre, Bolivia · ${universidades.length} ${t('instituciones')}</span>`
+  );
+
+  const listaItems = universidades.map(u => `
+    <div class="mapa-uni-item" id="item-${u.sigla}" onclick="seleccionarUni('${u.sigla}')">
+      <span class="mapa-uni-dot" style="background:${u.color}"></span>
+      <span class="mapa-uni-nombre">${u.sigla}</span>
+      <span class="mapa-uni-tipo">${u.tipo==='publica'? t('publica') : t('privada')}</span>
+    </div>`).join('');
+
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = `
+    <div class="mapa-layout">
+      <div id="map"></div>
+      <div class="mapa-panel">
+        <div class="mapa-panel-header">
+          <h3>${t('unisSucre')}</h3>
+          <p>${t('clickMarcador')}</p>
+        </div>
+        <div class="mapa-uni-lista">${listaItems}</div>
+        <div class="mapa-info">
+          <div class="mapa-info-placeholder" id="mapaPlaceholder">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            <p>${t('seleccionaUni')}</p>
+          </div>
+          <div class="mapa-info-uni" id="mapaInfoUni"></div>
+        </div>
+      </div>
+    </div>`;
+  cont.appendChild(wrapper);
+
+  setTimeout(() => {
+    if (mapInstance) return;
+    mapInstance = L.map('map').setView([-19.043,-65.259], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution:'© OpenStreetMap'
+    }).addTo(mapInstance);
+
+    universidades.forEach(u => {
+      const icono = L.divIcon({
+        className:'',
+        html:`<div class="marker-custom" style="border-color:${u.color}" title="${u.nombre}">
+                <img src="${u.imagen}" onerror="this.parentElement.style.background='${u.color}';this.style.display='none'">
+              </div>`,
+        iconSize:[50,50], iconAnchor:[25,25], popupAnchor:[0,-28]
+      });
+      L.marker(u.coords, {icon:icono})
+        .addTo(mapInstance)
+        .bindPopup(`<strong style="font-family:'Playfair Display',serif;color:${u.color}">${u.sigla}</strong><br><small style="color:#555">${u.nombre}</small>`,{maxWidth:220})
+        .on("click", () => seleccionarUni(u.sigla));
+    });
+
+    mapInstance.invalidateSize();
+  }, 200);
+}
+
+function seleccionarUni(sigla) {
+  const u = universidades.find(u => u.sigla === sigla);
+  if (!u) return;
+
+  document.querySelectorAll(".mapa-uni-item").forEach(el => el.classList.remove("activo"));
+  const item = document.getElementById("item-"+sigla);
+  if (item) { item.classList.add("activo"); item.scrollIntoView({block:"nearest"}); }
+
+  if (mapInstance) mapInstance.setView(u.coords, 16, {animate:true});
+
+  document.getElementById("mapaPlaceholder").style.display = "none";
+  const infoDiv = document.getElementById("mapaInfoUni");
+  infoDiv.className = "mapa-info-uni visible";
+
+  const numCar = u.facultades.reduce((s,f) => s+f.carreras.length, 0);
+  infoDiv.innerHTML = `
+    <div class="mapa-info-nombre">${u.nombre}</div>
+    <span class="mapa-info-sigla" style="background:${u.color}">${u.sigla}</span>
+    <div class="mapa-info-fila">
+      <span class="mapa-info-label">${t('tipo')}</span>
+      <span class="mapa-info-valor">${u.tipo==='publica'?'🏛 '+t('publica'):'🏫 '+t('privada')}</span>
+    </div>
+    <div class="mapa-info-fila">
+      <span class="mapa-info-label">${t('facultades')}</span>
+      <span class="mapa-info-valor">${u.facultades.length}</span>
+    </div>
+    <div class="mapa-info-fila">
+      <span class="mapa-info-label">${t('carreras')}</span>
+      <span class="mapa-info-valor">${numCar}</span>
+    </div>
+    <div class="mapa-info-fila">
+      <span class="mapa-info-label">${t('ranking')}</span>
+      <span class="mapa-info-valor">#${u.ranking}</span>
+    </div>
+    <div class="mapa-info-fila">
+      <span class="mapa-info-label">${t('coords')}</span>
+      <span class="mapa-info-valor" style="font-size:.7rem">${u.coords[0].toFixed(4)}, ${u.coords[1].toFixed(4)}</span>
+    </div>`;
+}
+</script>
+</body>
+</html>
