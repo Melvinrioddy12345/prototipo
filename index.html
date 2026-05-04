@@ -9,15 +9,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
-/* ── VARIABLES LIGHT ── */
 :root,[data-theme="light"]{
   --cream:#F5EFE0;--parchment:#EDE0C4;--clay:#A0522D;--terracota:#C1440E;--gold:#C49A22;
   --dark:#1E1510;--ink:#3D2B1F;--muted:#7A6552;--white:#FDFAF4;--shadow:rgba(30,21,16,.15);
   --card-bg:#FDFAF4;--body-bg:#F5EFE0;--border-color:#EDE0C4;--input-bg:#FDFAF4;
   --radius-sm:8px;--radius-md:16px;--radius-lg:24px;
 }
-/* ── VARIABLES DARK ── */
 [data-theme="dark"]{
   --cream:#1a1412;--parchment:#2a2118;--clay:#D4845A;--terracota:#E05A30;--gold:#E8B84B;
   --dark:#F5EFE0;--ink:#EDE0C4;--muted:#A89880;--white:#241e19;--shadow:rgba(0,0,0,.4);
@@ -30,37 +30,27 @@ body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes slideIn{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(196,154,34,.4)}50%{box-shadow:0 0 0 8px rgba(196,154,34,0)}}
 
 /* ── INICIO ── */
 #inicio{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px 40px;background-image:url('panorama.png');background-size:cover;background-position:center;background-repeat:no-repeat}
 #inicio::before{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,6,3,.52) 0%,rgba(20,12,6,.68) 50%,rgba(10,6,3,.78) 100%);z-index:0}
 #inicio>*{position:relative;z-index:1}
-
-/* ── TOPBAR: idioma + dark mode ── */
 .inicio-topbar{position:absolute;top:18px;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:0 24px}
 .idioma-selector{display:flex;gap:6px;align-items:center}
 .idioma-btn{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;border:1.5px solid rgba(237,224,196,.3);background:rgba(10,6,3,.45);backdrop-filter:blur(6px);color:rgba(237,224,196,.75);font-family:'Lato',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s}
 .idioma-btn:hover{border-color:var(--gold);color:var(--gold)}
 .idioma-btn.activo{border-color:var(--gold);color:var(--gold);background:rgba(196,154,34,.15)}
 .idioma-btn .bandera{font-size:1rem}
-
-/* Dark mode toggle */
-.dark-toggle{display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:20px;border:1.5px solid rgba(237,224,196,.3);background:rgba(10,6,3,.45);backdrop-filter:blur(6px);color:rgba(237,224,196,.75);font-family:'Lato',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.dark-toggle{display:flex;align-items:center;gap:7px;padding:5px 13px;border-radius:20px;border:1.5px solid rgba(237,224,196,.3);background:rgba(10,6,3,.45);backdrop-filter:blur(6px);color:rgba(237,224,196,.75);font-family:'Lato',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s}
 .dark-toggle:hover{border-color:var(--gold);color:var(--gold)}
-.dark-toggle svg{width:16px;height:16px;fill:currentColor;transition:transform .4s}
-[data-theme="dark"] .dark-toggle svg{transform:rotate(180deg)}
-
-/* ── LOGO EXPLORAU ── */
-.explorau-logo{display:flex;flex-direction:column;align-items:center;margin-bottom:4px}
-.explorau-nombre{font-family:'Playfair Display',serif;font-size:clamp(3rem,9vw,5.5rem);font-weight:700;color:#F5EFE0;letter-spacing:3px;text-shadow:0 2px 24px rgba(0,0,0,.6);line-height:1}
-.explorau-tagline{font-size:clamp(.72rem,2vw,.88rem);font-weight:300;color:rgba(237,224,196,.55);letter-spacing:4px;text-transform:uppercase;margin-top:8px}
-
+.dark-toggle svg{width:15px;height:15px;fill:currentColor}
+.explorau-nombre{font-family:'Playfair Display',serif;font-size:clamp(3rem,9vw,5.5rem);font-weight:700;color:#F5EFE0;letter-spacing:3px;text-shadow:0 2px 24px rgba(0,0,0,.6);line-height:1;text-align:center}
+.explorau-tagline{font-size:clamp(.72rem,2vw,.88rem);font-weight:300;color:rgba(237,224,196,.55);letter-spacing:4px;text-transform:uppercase;margin-top:8px;text-align:center}
 .divider-gold{display:flex;align-items:center;gap:12px;margin:24px auto;width:260px}
 .divider-gold::before,.divider-gold::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,34,.7),transparent)}
 .divider-gold span{font-size:16px;color:var(--gold)}
 .inicio-pregunta{font-size:clamp(.9rem,2.5vw,1.05rem);color:rgba(237,224,196,.78);text-align:center;margin-bottom:28px}
-
-/* ── GRID DE BOTONES 3 COLUMNAS ── */
 .botones-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:700px;width:100%}
 .boton{padding:14px 18px;font-family:'Lato',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;border:none;border-radius:var(--radius-sm);cursor:pointer;position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s;display:flex;align-items:center;justify-content:center;gap:8px;backdrop-filter:blur(4px)}
 .boton::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.1);opacity:0;transition:opacity .25s}
@@ -74,10 +64,9 @@ body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(
 .boton-mapa{background:rgba(196,154,34,.9);color:#1E1510;border:1px solid rgba(255,255,255,.1);box-shadow:0 6px 20px rgba(196,154,34,.4)}
 .boton-inst-pub{background:rgba(14,90,80,.85);color:#FDFAF4;border:1px solid rgba(255,255,255,.1);box-shadow:0 6px 20px rgba(14,90,80,.4)}
 .boton-inst-priv{background:rgba(60,40,120,.85);color:#FDFAF4;border:1px solid rgba(255,255,255,.1);box-shadow:0 6px 20px rgba(60,40,120,.4)}
-
 .inicio-tag{margin-top:32px;font-size:.68rem;letter-spacing:2.5px;text-transform:uppercase;text-align:center;color:rgba(237,224,196,.35)}
 
-/* ── DARK TOGGLE EN CONTENIDO ── */
+/* ── DARK TOGGLE FLOTANTE ── */
 .content-topbar{position:fixed;top:16px;right:20px;z-index:500}
 .dark-toggle-content{display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:20px;border:1.5px solid var(--border-color);background:var(--card-bg);color:var(--muted);font-family:'Lato',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;box-shadow:0 2px 12px var(--shadow)}
 .dark-toggle-content:hover{border-color:var(--clay);color:var(--clay)}
@@ -98,10 +87,22 @@ body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(
 [data-theme="dark"] .badge-inst-pub{color:#4dc4b8}
 [data-theme="dark"] .badge-inst-priv{color:#9b80e8}
 
+/* ── CONTACTO BOTONES ── */
+.contacto-bar{display:flex;align-items:center;gap:8px;padding:10px 24px;border-top:1px solid var(--border-color);background:rgba(30,21,16,.02);flex-wrap:wrap}
+[data-theme="dark"] .contacto-bar{background:rgba(255,255,255,.02)}
+.contacto-dir{font-size:.75rem;color:var(--muted);flex:1;min-width:120px;display:flex;align-items:center;gap:6px}
+.contacto-dir svg{width:13px;height:13px;fill:var(--muted);flex-shrink:0}
+.contacto-btns{display:flex;gap:8px;align-items:center}
+.btn-fb{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:#1877F2;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;text-decoration:none}
+.btn-fb:hover{transform:scale(1.1);box-shadow:0 4px 12px rgba(24,119,242,.4)}
+.btn-fb svg{width:18px;height:18px;fill:white}
+.btn-wa{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:#25D366;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;text-decoration:none}
+.btn-wa:hover{transform:scale(1.1);box-shadow:0 4px 12px rgba(37,211,102,.4)}
+.btn-wa svg{width:18px;height:18px;fill:white}
+
 /* ── CARDS UNIVERSIDADES ── */
 .card{background:var(--card-bg);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:28px;box-shadow:0 4px 24px var(--shadow);border-top:4px solid;transition:box-shadow .3s,transform .3s}
-.card:hover{box-shadow:0 16px 48px rgba(30,21,16,.18);transform:translateY(-4px)}
-[data-theme="dark"] .card:hover{box-shadow:0 16px 48px rgba(0,0,0,.5)}
+.card:hover{box-shadow:0 16px 48px var(--shadow);transform:translateY(-4px)}
 .card-header{display:flex;align-items:center;gap:16px;padding:24px 24px 18px;border-bottom:1px solid var(--border-color);flex-wrap:wrap}
 .logo{width:52px;height:52px;object-fit:contain;border-radius:var(--radius-sm);flex-shrink:0}
 .logo-fallback{width:52px;height:52px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:white;flex-shrink:0}
@@ -137,25 +138,52 @@ body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(
 .stat-num{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--dark);line-height:1}
 .stat-label{font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:2px}
 
+/* ── USFX VIRTUAL CARD ── */
+.virtual-card{background:linear-gradient(135deg,#0d1b2a 0%,#1a2f4a 40%,#0d2137 100%);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:28px;box-shadow:0 8px 40px rgba(13,27,42,.5),0 0 0 1px rgba(100,180,255,.15);position:relative;animation:fadeUp .6s ease .1s both}
+[data-theme="dark"] .virtual-card{background:linear-gradient(135deg,#060e18 0%,#0f1e30 40%,#071525 100%);box-shadow:0 8px 40px rgba(0,0,0,.7),0 0 0 1px rgba(100,180,255,.1)}
+.virtual-card::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='1' fill='white' fill-opacity='.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+.virtual-card>*{position:relative;z-index:1}
+.virtual-header{padding:24px 28px 18px;border-bottom:1px solid rgba(100,180,255,.12);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.virtual-icon-wrap{width:52px;height:52px;border-radius:var(--radius-sm);background:linear-gradient(135deg,#1565C0,#0288D1);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 16px rgba(2,136,209,.4)}
+.virtual-icon-wrap svg{width:26px;height:26px;fill:white}
+.virtual-info{flex:1;min-width:0}
+.virtual-nombre{font-family:'Playfair Display',serif;font-size:clamp(1rem,2.5vw,1.2rem);font-weight:700;color:#E3F2FD;line-height:1.25}
+.virtual-badge-new{display:inline-flex;align-items:center;gap:5px;margin-top:6px;padding:3px 12px;border-radius:20px;background:linear-gradient(90deg,#1565C0,#0288D1);font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:white;animation:pulse 2s infinite}
+.virtual-sigla{display:inline-block;margin-left:8px;padding:2px 10px;border-radius:20px;font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:white;background:rgba(100,180,255,.2);border:1px solid rgba(100,180,255,.3)}
+.virtual-tipo{font-size:.66rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(100,180,255,.6);font-weight:700;padding:5px 12px;border:1px solid rgba(100,180,255,.2);border-radius:20px;flex-shrink:0}
+.virtual-body{padding:20px 28px}
+.virtual-desc{font-size:.82rem;color:rgba(163,210,255,.75);margin-bottom:18px;line-height:1.6}
+.virtual-carreras-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.virtual-carrera-item{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:var(--radius-sm);background:rgba(255,255,255,.04);border:1px solid rgba(100,180,255,.12);transition:background .2s,border-color .2s;cursor:default}
+.virtual-carrera-item:hover{background:rgba(100,180,255,.08);border-color:rgba(100,180,255,.25)}
+.virtual-carrera-dot{width:6px;height:6px;border-radius:50%;background:#29B6F6;flex-shrink:0}
+.virtual-carrera-txt{font-size:.8rem;color:#B3E5FC;font-weight:600}
+.virtual-footer{padding:14px 28px;border-top:1px solid rgba(100,180,255,.1);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.virtual-stat{text-align:center}
+.virtual-stat-num{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:#29B6F6}
+.virtual-stat-label{font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(100,180,255,.5);margin-top:1px}
+.virtual-contacto{margin-left:auto;display:flex;gap:8px}
+
 /* ── CARDS INSTITUTOS ── */
 .inst-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
-.inst-card{background:var(--card-bg);border-radius:var(--radius-md);padding:22px;border-left:4px solid;box-shadow:0 4px 20px var(--shadow);transition:transform .25s,box-shadow .25s}
+.inst-card{background:var(--card-bg);border-radius:var(--radius-md);overflow:hidden;border-left:4px solid;box-shadow:0 4px 20px var(--shadow);transition:transform .25s,box-shadow .25s;display:flex;flex-direction:column}
 .inst-card:hover{transform:translateY(-3px);box-shadow:0 12px 36px var(--shadow)}
-.inst-header{display:flex;align-items:center;gap:14px;margin-bottom:16px}
-.inst-logo{width:52px;height:52px;object-fit:contain;border-radius:var(--radius-sm);flex-shrink:0;background:var(--parchment);padding:2px}
+.inst-card-body{padding:20px 20px 14px}
+.inst-header{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.inst-logo{width:50px;height:50px;object-fit:contain;border-radius:var(--radius-sm);flex-shrink:0;background:var(--parchment);padding:2px}
 [data-theme="dark"] .inst-logo{background:rgba(255,255,255,.06)}
-.inst-logo-fb{width:52px;height:52px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:white;flex-shrink:0}
+.inst-logo-fb{width:50px;height:50px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:white;flex-shrink:0}
 .inst-info{flex:1;min-width:0}
-.inst-nombre{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;color:var(--dark);line-height:1.3}
-.inst-sigla{display:inline-block;margin-top:5px;padding:2px 10px;border-radius:20px;font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:white}
-.inst-carreras-lista{list-style:none}
-.inst-carreras-lista li{font-size:.8rem;color:var(--muted);padding:5px 0;border-bottom:1px dashed var(--border-color);display:flex;align-items:center;gap:8px}
-.inst-carreras-lista li::before{content:'';width:4px;height:4px;border-radius:50%;flex-shrink:0}
+.inst-nombre{font-family:'Playfair Display',serif;font-size:.93rem;font-weight:700;color:var(--dark);line-height:1.3}
+.inst-sigla{display:inline-block;margin-top:4px;padding:2px 9px;border-radius:20px;font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:white}
+.inst-carreras-lista{list-style:none;margin-bottom:6px}
+.inst-carreras-lista li{font-size:.78rem;color:var(--muted);padding:4px 0;border-bottom:1px dashed var(--border-color);display:flex;align-items:center;gap:7px}
 .inst-carreras-lista li:last-child{border-bottom:none}
-.inst-footer{margin-top:14px;padding-top:10px;border-top:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center}
-.inst-tipo-badge{font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:700;padding:3px 10px;border:1px solid var(--border-color);border-radius:20px}
-.inst-count{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;color:var(--dark)}
-.inst-count-label{font-size:.6rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.inst-contacto-bar{display:flex;align-items:center;gap:8px;padding:12px 20px;border-top:1px solid var(--border-color);background:rgba(30,21,16,.02);margin-top:auto;flex-wrap:wrap}
+[data-theme="dark"] .inst-contacto-bar{background:rgba(255,255,255,.02)}
+.inst-dir{font-size:.72rem;color:var(--muted);flex:1;min-width:80px;display:flex;align-items:flex-start;gap:5px;line-height:1.4}
+.inst-dir svg{width:12px;height:12px;fill:var(--muted);flex-shrink:0;margin-top:1px}
+.inst-btns{display:flex;gap:7px;align-items:center;flex-shrink:0}
 
 /* ── BUSCADOR ── */
 .buscador-wrap{position:relative;margin-bottom:22px}
@@ -176,7 +204,6 @@ body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(
 .res-carrera{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:600;color:var(--dark);line-height:1.3;margin-bottom:5px}
 .res-uni{font-size:.78rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .res-sigla{display:inline-block;margin-top:5px;padding:2px 9px;border-radius:20px;font-size:.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:white}
-.res-fac{font-size:.7rem;color:var(--muted);margin-top:3px;font-style:italic;line-height:1.3}
 .res-plan-badge{display:inline-flex;align-items:center;gap:4px;margin-top:7px;padding:2px 9px;border-radius:20px;background:rgba(196,154,34,.12);color:#7a5c00;font-size:.62rem;font-weight:700;letter-spacing:1px}
 [data-theme="dark"] .res-plan-badge{color:#c9a445}
 .busqueda-vacia,.busqueda-inicio{text-align:center;padding:56px 20px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:12px}
@@ -191,7 +218,7 @@ body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(
 .mapa-panel-header{padding:20px 20px 14px;border-bottom:1px solid var(--border-color)}
 .mapa-panel-header h3{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--dark)}
 .mapa-panel-header p{font-size:.75rem;color:var(--muted);margin-top:3px}
-.mapa-uni-lista{padding:10px;border-bottom:1px solid var(--border-color);display:flex;flex-direction:column;gap:5px;overflow-y:auto;max-height:220px}
+.mapa-uni-lista{padding:10px;border-bottom:1px solid var(--border-color);display:flex;flex-direction:column;gap:5px;max-height:210px;overflow-y:auto}
 .mapa-uni-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--radius-sm);cursor:pointer;transition:background .2s;border:1.5px solid transparent}
 .mapa-uni-item:hover{background:rgba(30,21,16,.04)}
 [data-theme="dark"] .mapa-uni-item:hover{background:rgba(255,255,255,.05)}
@@ -215,7 +242,7 @@ body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(
 .marker-custom{width:48px;height:48px;border-radius:50%;border:3px solid white;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.35);cursor:pointer}
 .marker-custom img{width:100%;height:100%;object-fit:cover;display:block}
 
-/* ── MODAL PLAN DE ESTUDIOS ── */
+/* ── MODAL ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(10,6,3,.75);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);animation:fadeIn .2s ease}
 .modal-overlay.hidden{display:none}
 .modal-box{background:var(--card-bg);border-radius:var(--radius-lg);width:100%;max-width:720px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.35);animation:slideIn .3s ease}
@@ -245,14 +272,18 @@ body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(
 .plan-cod{font-family:monospace;font-size:.73rem;color:var(--clay);font-weight:700;white-space:nowrap}
 .plan-num{font-family:'Playfair Display',serif;font-size:.88rem;color:var(--muted);width:30px}
 .plan-empty{text-align:center;padding:44px 20px;color:var(--muted);font-size:.88rem}
+.btn-pdf{display:inline-flex;align-items:center;gap:7px;padding:7px 18px;border-radius:50px;border:none;background:linear-gradient(135deg,#C62828,#E53935);color:white;font-family:'Lato',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 14px rgba(198,40,40,.35);flex-shrink:0}
+.btn-pdf:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(198,40,40,.5)}
+.btn-pdf:active{transform:scale(.97)}
+.btn-pdf svg{width:15px;height:15px;fill:white;flex-shrink:0}
 
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--parchment)}::-webkit-scrollbar-thumb{background:var(--clay);border-radius:3px}
 .modal-body::-webkit-scrollbar{width:3px}.modal-tabs::-webkit-scrollbar{height:3px}
 
 @media(max-width:1024px){.botones-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:900px){.mapa-layout{grid-template-columns:1fr}.mapa-panel{border-left:none;border-top:1px solid var(--border-color)}#map{height:300px}}
-@media(max-width:768px){.card-body{grid-template-columns:1fr}.card-imagen-wrap{min-height:180px;order:-1}.card-imagen-wrap::before{background:linear-gradient(to bottom,var(--card-bg) 0%,transparent 40%)}.botones-grid{grid-template-columns:1fr;max-width:300px}.resultados-grid{grid-template-columns:1fr}.modal-box{max-height:95vh}.modal-header{padding:16px 18px}.modal-body{padding:16px 18px}.inst-grid{grid-template-columns:1fr}}
-@media(max-width:480px){.modal-tabs{padding:10px 10px 0}.modal-tab{padding:5px 9px;font-size:.7rem}.inicio-topbar{padding:0 12px}.botones-grid{gap:10px}}
+@media(max-width:768px){.card-body{grid-template-columns:1fr}.card-imagen-wrap{min-height:180px;order:-1}.card-imagen-wrap::before{background:linear-gradient(to bottom,var(--card-bg) 0%,transparent 40%)}.botones-grid{grid-template-columns:1fr;max-width:300px}.resultados-grid{grid-template-columns:1fr}.modal-box{max-height:95vh}.modal-header{padding:16px 18px}.modal-body{padding:16px 18px}.inst-grid{grid-template-columns:1fr}.virtual-carreras-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.modal-tabs{padding:10px 10px 0}.modal-tab{padding:5px 9px;font-size:.7rem}.inicio-topbar{padding:0 12px}.botones-grid{gap:10px}.virtual-carreras-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -270,15 +301,12 @@ body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(
       <span id="darkLabelInicio">Oscuro</span>
     </button>
   </div>
-
-  <div class="explorau-logo">
+  <div style="text-align:center">
     <div class="explorau-nombre">ExploraU</div>
     <div class="explorau-tagline" id="txt-tagline">Guía Universitaria de Sucre</div>
   </div>
-
   <div class="divider-gold"><span>✦</span></div>
   <p class="inicio-pregunta" id="txt-pregunta">¿Qué deseas explorar?</p>
-
   <div class="botones-grid">
     <button class="boton boton-publica" onclick="filtrar('publica')">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l4 2.18V17h2v-4.82l2 1.09V17c0 1.66 2.69 3 6 3s6-1.34 6-3v-3.73l2-1.09L23 9 12 3z"/></svg>
@@ -308,7 +336,6 @@ body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(
   <p class="inicio-tag" id="txt-tag">Sucre · Bolivia · Educación Superior</p>
 </div>
 
-<!-- ══ DARK TOGGLE FLOTANTE EN CONTENIDO ══ -->
 <div class="content-topbar" id="contentTopbar" style="display:none">
   <button class="dark-toggle-content" onclick="toggleDark()">
     <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 100 18A9 9 0 0012 3zm0 16a7 7 0 010-14v14z"/></svg>
@@ -316,16 +343,15 @@ body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(
   </button>
 </div>
 
-<!-- ══ CONTENIDO ══ -->
 <div id="contenido"></div>
 
-<!-- ══ MODAL PLAN DE ESTUDIOS ══ -->
+<!-- MODAL -->
 <div class="modal-overlay hidden" id="modalOverlay" onclick="cerrarModal(event)">
   <div class="modal-box">
     <div class="modal-header">
       <div class="modal-header-info">
-        <div class="modal-carrera-nombre" id="modalCarreraNombre">Carrera</div>
-        <div class="modal-uni-nombre" id="modalUniNombre">Universidad</div>
+        <div class="modal-carrera-nombre" id="modalCarreraNombre"></div>
+        <div class="modal-uni-nombre" id="modalUniNombre"></div>
         <div class="modal-badges" id="modalBadges"></div>
       </div>
       <button class="modal-close" onclick="cerrarModal()">
@@ -346,61 +372,49 @@ const PLANES_PRIVADAS=
 ;
 
 /* ══ DARK MODE ══ */
-let modoOscuro = false;
+let modoOscuro=false;
 function toggleDark(){
-  modoOscuro = !modoOscuro;
-  document.documentElement.setAttribute('data-theme', modoOscuro ? 'dark' : 'light');
-  const label = modoOscuro ? t('modoClaro') : t('modoOscuro');
-  ['darkLabelInicio','darkLabelContent'].forEach(id=>{
-    const el = document.getElementById(id); if(el) el.textContent = label;
-  });
+  modoOscuro=!modoOscuro;
+  document.documentElement.setAttribute('data-theme',modoOscuro?'dark':'light');
+  const lb=modoOscuro?t('modoClaro'):t('modoOscuro');
+  ['darkLabelInicio','darkLabelContent'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=lb});
 }
 
-/* ══ TRADUCCIONES ══ */
+/* ══ I18N ══ */
 const i18n={
-  es:{tagline:"Guía Universitaria de Sucre",pregunta:"¿Qué deseas explorar?",btnPublica:"Universidades Públicas",btnPrivada:"Universidades Privadas",btnBuscador:"Buscador",btnMapa:"Mapa",btnInstPub:"Institutos Públicos",btnInstPriv:"Institutos Privados",tag:"Sucre · Bolivia · Educación Superior",tituloPublica:"Universidades Públicas",tituloPrivada:"Universidades Privadas",tituloBuscador:"Buscador de Carreras",tituloMapa:"Mapa de Universidades",tituloInstPub:"Institutos Técnicos Públicos",tituloInstPriv:"Institutos Técnicos Privados",volver:"Volver",publica:"Pública",privada:"Privada",publico:"Público",privado:"Privado",facultades:"Facultades",carreras:"Carreras",placeholder:"Ej: Medicina, Gastronomía, Derecho, Sistemas...",mostrando:"Mostrando",resultados:"resultados",sinResultados:"Sin resultados para esa búsqueda",intentaOtro:"Intenta con otro término",buscarTexto:"Busca carreras en universidades e institutos de Sucre",buscarSub:"Ingeniería · Medicina · Gastronomía · Sistemas · y muchas más",seleccionaUni:"Selecciona una institución",clickMarcador:"Clic en marcador o en la lista",unisSucre:"Universidades en Sucre",tipo:"Tipo",ranking:"Ranking",coords:"Coords.",instituciones:"instituciones",institutos:"institutos",planEstudios:"Plan de Estudios",semestre:"Semestre",materias:"Materias",verPlan:"Ver plan de estudios",sinPlan:"Sin plan disponible",totalMaterias:"materias en total",modoOscuro:"Oscuro",modoClaro:"Claro",tecnico:"Técnico Superior",nivelTecnico:"Nivel Técnico Superior"},
-  en:{tagline:"University Guide of Sucre",pregunta:"What would you like to explore?",btnPublica:"Public Universities",btnPrivada:"Private Universities",btnBuscador:"Search",btnMapa:"Map",btnInstPub:"Public Institutes",btnInstPriv:"Private Institutes",tag:"Sucre · Bolivia · Higher Education",tituloPublica:"Public Universities",tituloPrivada:"Private Universities",tituloBuscador:"Program Search",tituloMapa:"University Map",tituloInstPub:"Public Technical Institutes",tituloInstPriv:"Private Technical Institutes",volver:"Back",publica:"Public",privada:"Private",publico:"Public",privado:"Private",facultades:"Faculties",carreras:"Programs",placeholder:"E.g.: Medicine, Gastronomy, Law, Systems...",mostrando:"Showing",resultados:"results",sinResultados:"No results found",intentaOtro:"Try a different search term",buscarTexto:"Search programs at universities and institutes in Sucre",buscarSub:"Engineering · Medicine · Gastronomy · Systems · and many more",seleccionaUni:"Select an institution",clickMarcador:"Click a marker or list item",unisSucre:"Universities in Sucre",tipo:"Type",ranking:"Ranking",coords:"Coords.",instituciones:"institutions",institutos:"institutes",planEstudios:"Study Plan",semestre:"Semester",materias:"Subjects",verPlan:"View study plan",sinPlan:"No plan available",totalMaterias:"total subjects",modoOscuro:"Dark",modoClaro:"Light",tecnico:"Technical",nivelTecnico:"Technical Level"},
-  pt:{tagline:"Guia Universitário de Sucre",pregunta:"O que você deseja explorar?",btnPublica:"Universidades Públicas",btnPrivada:"Universidades Privadas",btnBuscador:"Buscar",btnMapa:"Mapa",btnInstPub:"Institutos Públicos",btnInstPriv:"Institutos Privados",tag:"Sucre · Bolívia · Ensino Superior",tituloPublica:"Universidades Públicas",tituloPrivada:"Universidades Privadas",tituloBuscador:"Busca de Cursos",tituloMapa:"Mapa das Universidades",tituloInstPub:"Institutos Técnicos Públicos",tituloInstPriv:"Institutos Técnicos Privados",volver:"Voltar",publica:"Pública",privada:"Privada",publico:"Público",privado:"Privado",facultades:"Faculdades",carreras:"Cursos",placeholder:"Ex: Medicina, Gastronomia, Direito, Sistemas...",mostrando:"Mostrando",resultados:"resultados",sinResultados:"Nenhum resultado encontrado",intentaOtro:"Tente outro termo",buscarTexto:"Pesquise cursos em universidades e institutos de Sucre",buscarSub:"Engenharia · Medicina · Gastronomia · Sistemas · e muito mais",seleccionaUni:"Selecione uma instituição",clickMarcador:"Clique em um marcador ou na lista",unisSucre:"Universidades em Sucre",tipo:"Tipo",ranking:"Ranking",coords:"Coords.",instituciones:"instituições",institutos:"institutos",planEstudios:"Plano de Estudos",semestre:"Período",materias:"Disciplinas",verPlan:"Ver plano de estudos",sinPlan:"Plano não disponível",totalMaterias:"disciplinas no total",modoOscuro:"Escuro",modoClaro:"Claro",tecnico:"Técnico",nivelTecnico:"Nível Técnico Superior"}
+  es:{tagline:"Guía Universitaria de Sucre",pregunta:"¿Qué deseas explorar?",btnPublica:"Universidades Públicas",btnPrivada:"Universidades Privadas",btnBuscador:"Buscador",btnMapa:"Mapa",btnInstPub:"Institutos Públicos",btnInstPriv:"Institutos Privados",tag:"Sucre · Bolivia · Educación Superior",tituloPublica:"Universidades Públicas",tituloPrivada:"Universidades Privadas",tituloBuscador:"Buscador de Carreras",tituloMapa:"Mapa de Universidades",tituloInstPub:"Institutos Técnicos Públicos",tituloInstPriv:"Institutos Técnicos Privados",volver:"Volver",publica:"Pública",privada:"Privada",publico:"Público",privado:"Privado",facultades:"Facultades",carreras:"Carreras",placeholder:"Ej: Medicina, Gastronomía, Derecho, Sistemas...",mostrando:"Mostrando",resultados:"resultados",sinResultados:"Sin resultados",intentaOtro:"Intenta con otro término",buscarTexto:"Busca carreras en universidades e institutos de Sucre",buscarSub:"Ingeniería · Medicina · Gastronomía · Sistemas · y muchas más",seleccionaUni:"Selecciona una institución",clickMarcador:"Clic en marcador o en la lista",unisSucre:"Universidades en Sucre",tipo:"Tipo",ranking:"Ranking",coords:"Coords.",instituciones:"instituciones",institutos:"institutos",planEstudios:"Plan de Estudios",semestre:"Semestre",materias:"Materias",verPlan:"Ver plan de estudios",sinPlan:"Sin plan disponible",totalMaterias:"materias en total",modoOscuro:"Oscuro",modoClaro:"Claro",nivelTecnico:"Nivel Técnico Superior",direccion:"Dirección",contacto:"Contacto",virtualDesc:"Modalidad de estudios a distancia — aprende desde cualquier lugar con acompañamiento docente en línea.",virtualNuevo:"Nueva Modalidad"},
+  en:{tagline:"University Guide of Sucre",pregunta:"What would you like to explore?",btnPublica:"Public Universities",btnPrivada:"Private Universities",btnBuscador:"Search",btnMapa:"Map",btnInstPub:"Public Institutes",btnInstPriv:"Private Institutes",tag:"Sucre · Bolivia · Higher Education",tituloPublica:"Public Universities",tituloPrivada:"Private Universities",tituloBuscador:"Program Search",tituloMapa:"University Map",tituloInstPub:"Public Technical Institutes",tituloInstPriv:"Private Technical Institutes",volver:"Back",publica:"Public",privada:"Private",publico:"Public",privado:"Private",facultades:"Faculties",carreras:"Programs",placeholder:"E.g.: Medicine, Gastronomy, Law, Systems...",mostrando:"Showing",resultados:"results",sinResultados:"No results found",intentaOtro:"Try another term",buscarTexto:"Search programs at universities and institutes in Sucre",buscarSub:"Engineering · Medicine · Gastronomy · Systems · and many more",seleccionaUni:"Select an institution",clickMarcador:"Click a marker or list item",unisSucre:"Universities in Sucre",tipo:"Type",ranking:"Ranking",coords:"Coords.",instituciones:"institutions",institutos:"institutes",planEstudios:"Study Plan",semestre:"Semester",materias:"Subjects",verPlan:"View study plan",sinPlan:"No plan available",totalMaterias:"total subjects",modoOscuro:"Dark",modoClaro:"Light",nivelTecnico:"Technical Level",direccion:"Address",contacto:"Contact",virtualDesc:"Distance learning modality — study from anywhere with online teacher support.",virtualNuevo:"New Modality"},
+  pt:{tagline:"Guia Universitário de Sucre",pregunta:"O que você deseja explorar?",btnPublica:"Universidades Públicas",btnPrivada:"Universidades Privadas",btnBuscador:"Buscar",btnMapa:"Mapa",btnInstPub:"Institutos Públicos",btnInstPriv:"Institutos Privados",tag:"Sucre · Bolívia · Ensino Superior",tituloPublica:"Universidades Públicas",tituloPrivada:"Universidades Privadas",tituloBuscador:"Busca de Cursos",tituloMapa:"Mapa das Universidades",tituloInstPub:"Institutos Técnicos Públicos",tituloInstPriv:"Institutos Técnicos Privados",volver:"Voltar",publica:"Pública",privada:"Privada",publico:"Público",privado:"Privado",facultades:"Faculdades",carreras:"Cursos",placeholder:"Ex: Medicina, Gastronomia, Direito, Sistemas...",mostrando:"Mostrando",resultados:"resultados",sinResultados:"Nenhum resultado",intentaOtro:"Tente outro termo",buscarTexto:"Pesquise cursos em universidades e institutos de Sucre",buscarSub:"Engenharia · Medicina · Gastronomia · Sistemas · e muito mais",seleccionaUni:"Selecione uma instituição",clickMarcador:"Clique em um marcador ou na lista",unisSucre:"Universidades em Sucre",tipo:"Tipo",ranking:"Ranking",coords:"Coords.",instituciones:"instituições",institutos:"institutos",planEstudios:"Plano de Estudos",semestre:"Período",materias:"Disciplinas",verPlan:"Ver plano de estudos",sinPlan:"Plano não disponível",totalMaterias:"disciplinas no total",modoOscuro:"Escuro",modoClaro:"Claro",nivelTecnico:"Nível Técnico Superior",direccion:"Endereço",contacto:"Contato",virtualDesc:"Modalidade de educação a distância — estude de qualquer lugar com suporte docente online.",virtualNuevo:"Nova Modalidade"}
 };
 let idiomaActual='es';
 function setIdioma(l){
   idiomaActual=l;const tr=i18n[l];
-  document.getElementById("txt-tagline").textContent=tr.tagline;
-  document.getElementById("txt-pregunta").textContent=tr.pregunta;
-  document.getElementById("txt-btn-publica").textContent=tr.btnPublica;
-  document.getElementById("txt-btn-privada").textContent=tr.btnPrivada;
-  document.getElementById("txt-btn-buscador").textContent=tr.btnBuscador;
-  document.getElementById("txt-btn-mapa").textContent=tr.btnMapa;
-  document.getElementById("txt-btn-inst-pub").textContent=tr.btnInstPub;
-  document.getElementById("txt-btn-inst-priv").textContent=tr.btnInstPriv;
-  document.getElementById("txt-tag").textContent=tr.tag;
+  const ids={tagline:"txt-tagline",pregunta:"txt-pregunta",btnPublica:"txt-btn-publica",btnPrivada:"txt-btn-privada",btnBuscador:"txt-btn-buscador",btnMapa:"txt-btn-mapa",btnInstPub:"txt-btn-inst-pub",btnInstPriv:"txt-btn-inst-priv",tag:"txt-tag"};
+  Object.entries(ids).forEach(([k,id])=>{const el=document.getElementById(id);if(el)el.textContent=tr[k]});
   ['es','en','pt'].forEach(x=>document.getElementById("btn-"+x).classList.toggle("activo",x===l));
-  const darkLabel=modoOscuro?tr.modoClaro:tr.modoOscuro;
-  ['darkLabelInicio','darkLabelContent'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=darkLabel});
+  const lb=modoOscuro?tr.modoClaro:tr.modoOscuro;
+  ['darkLabelInicio','darkLabelContent'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=lb});
 }
 function t(k){return i18n[idiomaActual][k]||k}
 
-/* ══ DATOS INSTITUTOS ══ */
-const institutosPrivados=[
-  {nombre:"Tecnológico INFOCAL Chuquisaca",sigla:"INFOCAL",color:"#D84315",logo:"infocal.png",tipo:"privado",carreras:["Mecánica Automotriz","Sistemas Informáticos","Gastronomía","Parvulario","Electricidad y Electrónica Automotriz","Instalaciones Eléctricas, Sistemas Fotovoltaicos y Gas","Administrador Contable Financiero Tributario"]},
-  {nombre:"Instituto Tecnológico TESLAVI",sigla:"TESLAVI",color:"#1565C0",logo:"teslavi.png",tipo:"privado",carreras:["Mecánica Automotriz","Mecánica Industrial","Electrónica"]},
-  {nombre:"Instituto Tecnológico ITEC",sigla:"ITEC",color:"#6A1B9A",logo:"itec.png",tipo:"privado",carreras:["Diseño Gráfico Multimedia","Electrónica y Automatizaciones","Gestión Pública","Mercadotecnia (Marketing y Publicidad)","Secretariado Ejecutivo","Sistemas Informáticos","Contaduría General"]},
-  {nombre:"Instituto Gastronómico de las Américas",sigla:"IGA",color:"#E65100",logo:"iga.png",tipo:"privado",carreras:["Gastronomía","Pastelería y Panadería"]},
-  {nombre:"Instituto Tecnológico Tomás Katari",sigla:"ITTK",color:"#2E7D32",logo:"ittk.png",tipo:"privado",carreras:["Administración de Empresas","Agroecología","Gestión Municipal"]},
-  {nombre:"Instituto Técnico CCA Sucre",sigla:"CCA",color:"#4527A0",logo:"cca.png",tipo:"privado",carreras:["Administración de Empresas","Secretariado Ejecutivo","Contaduría General","Sistemas Informáticos","Mercadotecnia (Marketing y Publicidad)"]},
-  {nombre:"Instituto Tecnológico ENTEC",sigla:"ENTEC",color:"#00695C",logo:"entec.png",tipo:"privado",carreras:["Gastronomía","Parvulario","Enfermería"]},
-  {nombre:"Tecnológico Boliviano Alemán Sucre",sigla:"TECBA",color:"#B71C1C",logo:"aleman.png",tipo:"privado",carreras:["Diseño Gráfico","Diseño Multimedia","Comercio Internacional","Contaduría General","Administración de Empresas","Mercadotecnia","Negocios Digitales","Construcción Civil","Diseño de Interiores","Sistemas Informáticos","Telecomunicaciones","Fisioterapia"]},
-  {nombre:"Centro Boliviano Americano Sucre",sigla:"CBA",color:"#1A237E",logo:"cba.png",tipo:"privado",carreras:["Inglés"]}
-];
-const institutosPublicos=[
-  {nombre:"Instituto Técnico Aurora Rossells de Fe y Alegría",sigla:"ITARFA",color:"#1B5E20",logo:"itarfa.png",tipo:"publico",carreras:["Secretariado Ejecutivo","Gastronomía","Contaduría General","Parvulario"]},
-  {nombre:"Instituto Técnico Superior de Educación Comercial Sucre",sigla:"ITSEC",color:"#01579B",logo:"itsec.png",tipo:"publico",carreras:["Secretariado Ejecutivo","Contaduría General","Sistemas Informáticos","Turismo","Mercadotecnia"]},
-  {nombre:"Universidad San Francisco Xavier de Chuquisaca (Nivel Técnico)",sigla:"USFX-TEC",color:"#B71C1C",logo:"usfx.png",tipo:"publico",carreras:["Química Industrial","Agronomía","Electricidad","Electrónica","Mecánica Automotriz","Industrias de Alimentos","Informática","Laboratorio Clínico","Topografía","Gestión Pública","Mercadotecnia","Gastronomía"]}
-];
+/* ══ ICONOS SVG ══ */
+const SVG_FB=`<svg viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`;
+const SVG_WA=`<svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`;
+const SVG_PIN=`<svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>`;
 
-/* ══ DATOS UNIVERSIDADES ══ */
+function mkFbBtn(url){return`<a class="btn-fb" href="${url}" target="_blank" rel="noopener" title="Facebook">${SVG_FB}</a>`}
+function mkWaBtn(num){return num?`<a class="btn-wa" href="https://wa.me/591${num}" target="_blank" rel="noopener" title="WhatsApp">${SVG_WA}</a>`:``}
+function mkContactoBar(fb,wa,dir){
+  return`<div class="contacto-bar">
+    <div class="contacto-dir">${SVG_PIN}<span>${dir}</span></div>
+    <div class="contacto-btns">${mkFbBtn(fb)}${mkWaBtn(wa)}</div>
+  </div>`
+}
+
+/* ══ DATOS ══ */
 const universidades=[
   {nombre:"Universidad Real y Pontificia de San Francisco Xavier de Chuquisaca",sigla:"USFX",tipo:"publica",color:"#C62828",logo:"escusfx.png",imagen:"usfx.jpg",coords:[-19.047162,-65.261225],ranking:1,
+   fb:"https://www.facebook.com/FranciscoXavierCh",wa:"",dir:"Calle Estudiantes Esq. Junín, Sucre, Bolivia",
    facultades:[
     {nombre:"Facultad de Derecho, Ciencias Políticas y Sociales",carreras:["Derecho","Ciencias de la Comunicación Social","Sociología","Historia","Comunicación Social y Medios Digitales"]},
     {nombre:"Facultad de Humanidades y Ciencias de la Educación",carreras:["Idiomas","Turismo","Pedagogía","Psicología","Trabajo Social","Turismo, Hotelería y Gestión Cultural"]},
@@ -418,6 +432,7 @@ const universidades=[
     {nombre:"Facultad de Contaduría Pública y Ciencias Financieras",carreras:["Contaduría Pública","Administración Financiera","Comercio Exterior y Aduanas","Ingeniería Financiera","Comercio Internacional"]}
   ]},
   {nombre:"Universidad del Valle",sigla:"UNIVALLE",tipo:"privada",color:"#4B0082",logo:"escunivalle.png",imagen:"univalle.jpg",coords:[-19.027458,-65.259722],ranking:4,
+   fb:"https://www.facebook.com/univallesucre",wa:"62890021",dir:"Guillermina de Ruiz N1, Sucre, Bolivia",
    facultades:[
     {nombre:"Facultad de Tecnología",carreras:["Ingeniería Civil"]},
     {nombre:"Facultad de Informática y Electrónica",carreras:["Ingeniería de Sistemas Informáticos"]},
@@ -425,6 +440,7 @@ const universidades=[
     {nombre:"Facultad de Ciencias Empresariales y Sociales",carreras:["Ingeniería Comercial","Ingeniería en Comercio Internacional","Derecho","Administración de Empresas","Psicología"]}
   ]},
   {nombre:"Universidad Privada Domingo Savio",sigla:"UPDS",tipo:"privada",color:"#0A1F44",logo:"escupds.png",imagen:"upds.jpg",coords:[-19.058091,-65.254682],ranking:3,
+   fb:"https://www.facebook.com/UPDSSUCRE",wa:"74163220",dir:"Calle Cacique Titu 175 Zona Villa Charcas, Sucre, Bolivia",
    facultades:[
     {nombre:"Facultad de Ingenierías",carreras:["Ingeniería Industrial","Ingeniería en Redes y Telecomunicaciones","Ingeniería de Sistemas","Ingeniería en Gestión Petrolera","Ingeniería Ambiental"]},
     {nombre:"Facultad de Ciencias Jurídicas y Sociales",carreras:["Derecho","Psicología"]},
@@ -432,38 +448,50 @@ const universidades=[
     {nombre:"Facultad de Ciencias de la Salud",carreras:["Medicina","Kinesiología y Fisioterapia"]}
   ]},
   {nombre:"Universidad Boliviana de Informática",sigla:"UBI",tipo:"privada",color:"#00838F",logo:"escubi.png",imagen:"ubi.jpg",coords:[-19.042251,-65.255473],ranking:5,
+   fb:"https://www.facebook.com/ubibolivia",wa:"75452299",dir:"Calle Aniceto Arce #513, Ciudad Sucre, Bolivia",
    facultades:[
     {nombre:"Carreras",carreras:["Arquitectura y Urbanismo","Ingeniería Comercial y Empresarial","Contaduría Pública y Auditoría Forense","Derecho","Medicina","Ingeniería Civil","Trabajo Social","Ingeniería de Sistemas TIC"]}
   ]},
   {nombre:"Universidad Católica Boliviana",sigla:"UCB",tipo:"privada",color:"#B8860B",logo:"escucb.png",imagen:"ucb.jpg",coords:[-19.049400,-65.260236],ranking:2,
+   fb:"https://www.facebook.com/ucbsucre",wa:"69418138",dir:"Calle Nicolás Ortiz N° 91, Sucre, Bolivia",
    facultades:[
     {nombre:"Carreras",carreras:["Administración de Empresas","Ingeniería de Sistemas","Medicina","Derecho"]}
   ]}
 ];
 
-/* Índice global de búsqueda (universidades + institutos) */
+const institutosPublicos=[
+  {nombre:"Instituto Técnico Aurora Rossells de Fe y Alegría",sigla:"ITARFA",color:"#1B5E20",logo:"itarfa.png",tipo:"publico",fb:"https://www.facebook.com/itarfa.sucre",wa:"64722223",dir:"Azurduy #57, Sucre, Bolivia",carreras:["Secretariado Ejecutivo","Gastronomía","Contaduría General","Parvulario"]},
+  {nombre:"Instituto Técnico Superior de Educación Comercial Sucre",sigla:"ITSEC",color:"#01579B",logo:"itsec.png",tipo:"publico",fb:"https://www.facebook.com/itsecvirtual",wa:"67615791",dir:"Calle Manuel Melean N°151, Sucre, Bolivia",carreras:["Secretariado Ejecutivo","Contaduría General","Sistemas Informáticos","Turismo","Mercadotecnia"]},
+  {nombre:"Universidad San Francisco Xavier de Chuquisaca (Nivel Técnico)",sigla:"USFX-TEC",color:"#B71C1C",logo:"escusfx.png",tipo:"publico",fb:"https://www.facebook.com/FranciscoXavierCh",wa:"",dir:"Calle Estudiantes Esq. Junín, Sucre, Bolivia",carreras:["Química Industrial","Agronomía","Electricidad","Electrónica","Mecánica Automotriz","Industrias de Alimentos","Informática","Laboratorio Clínico","Topografía","Gestión Pública","Mercadotecnia","Gastronomía"]}
+];
+
+const institutosPrivados=[
+  {nombre:"Tecnológico INFOCAL Chuquisaca",sigla:"INFOCAL",color:"#D84315",logo:"infocal.png",tipo:"privado",fb:"https://www.facebook.com/infocalch",wa:"69241161",dir:"Calle Oruro #470, Sucre, Bolivia",carreras:["Mecánica Automotriz","Sistemas Informáticos","Gastronomía","Parvulario","Electricidad y Electrónica Automotriz","Instalaciones Eléctricas, Sistemas Fotovoltaicos y Gas","Administrador Contable Financiero Tributario"]},
+  {nombre:"Instituto Tecnológico TESLAVI",sigla:"TESLAVI",color:"#1565C0",logo:"teslavi.png",tipo:"privado",fb:"https://www.facebook.com/TESLAVI",wa:"62327206",dir:"Av. Julio Villa #990, Sucre, Bolivia",carreras:["Mecánica Automotriz","Mecánica Industrial","Electrónica"]},
+  {nombre:"Instituto Tecnológico ITEC",sigla:"ITEC",color:"#6A1B9A",logo:"itec.png",tipo:"privado",fb:"https://www.facebook.com/Itec.educa",wa:"72871823",dir:"Aniceto Arce #289, Ciudad Sucre, Bolivia",carreras:["Diseño Gráfico Multimedia","Electrónica y Automatizaciones","Gestión Pública","Mercadotecnia (Marketing y Publicidad)","Secretariado Ejecutivo","Sistemas Informáticos","Contaduría General"]},
+  {nombre:"Instituto Gastronómico de las Américas",sigla:"IGA",color:"#E65100",logo:"iga.png",tipo:"privado",fb:"https://www.facebook.com/igaedu.filialsucre",wa:"71163311",dir:"Otto Von Braun 74, Sucre, Bolivia",carreras:["Gastronomía","Pastelería y Panadería"]},
+  {nombre:"Instituto Tecnológico Tomás Katari",sigla:"ITTK",color:"#2E7D32",logo:"ittk.png",tipo:"privado",fb:"https://www.facebook.com/profile.php?id=61584219845189",wa:"63750687",dir:"Calle España #429, Sucre, Bolivia",carreras:["Administración de Empresas","Agroecología","Gestión Municipal"]},
+  {nombre:"Instituto Técnico CCA Sucre",sigla:"CCA",color:"#4527A0",logo:"cca.png",tipo:"privado",fb:"https://www.facebook.com/SucreCCA",wa:"75621208",dir:"Calvo N°18, Ciudad Sucre, Bolivia",carreras:["Administración de Empresas","Secretariado Ejecutivo","Contaduría General","Sistemas Informáticos","Mercadotecnia (Marketing y Publicidad)"]},
+  {nombre:"Instituto Tecnológico ENTEC",sigla:"ENTEC",color:"#00695C",logo:"entec.png",tipo:"privado",fb:"https://www.facebook.com/entecsucrebolivia",wa:"64732962",dir:"Adolfo Vilar 138, Sucre, Bolivia",carreras:["Gastronomía","Parvulario","Enfermería"]},
+  {nombre:"Tecnológico Boliviano Alemán Sucre",sigla:"TECBA",color:"#B71C1C",logo:"aleman.png",tipo:"privado",fb:"https://www.facebook.com/tecbasucre",wa:"75444703",dir:"Av. Hernando Siles, Sucre, Bolivia",carreras:["Diseño Gráfico","Diseño Multimedia","Comercio Internacional","Contaduría General","Administración de Empresas","Mercadotecnia","Negocios Digitales","Construcción Civil","Diseño de Interiores","Sistemas Informáticos","Telecomunicaciones","Fisioterapia"]},
+  {nombre:"Centro Boliviano Americano Sucre",sigla:"CBA",color:"#1A237E",logo:"cba.png",tipo:"privado",fb:"https://www.facebook.com/CBAFanPage",wa:"62900082",dir:"Calle Calvo #301 y #332 esq. Potosí, Ciudad Sucre, Bolivia",carreras:["Inglés"]}
+];
+
+/* Índice global de búsqueda */
 const indiceGlobal=[];
-universidades.forEach(u=>u.facultades.forEach(f=>f.carreras.forEach(c=>indiceGlobal.push({carrera:c,facultad:f.nombre,inst:u.nombre,sigla:u.sigla,color:u.color,logo:u.logo,tipo:'universidad',planKey:c,planSigla:u.sigla}))));
-[...institutosPrivados,...institutosPublicos].forEach(inst=>inst.carreras.forEach(c=>indiceGlobal.push({carrera:c,facultad:t('nivelTecnico'),inst:inst.nombre,sigla:inst.sigla,color:inst.color,logo:inst.logo,tipo:'instituto',planKey:null,planSigla:null})));
+universidades.forEach(u=>u.facultades.forEach(f=>f.carreras.forEach(c=>indiceGlobal.push({carrera:c,facultad:f.nombre,inst:u.nombre,sigla:u.sigla,color:u.color,logo:u.logo,tipo:'universidad',planSigla:u.sigla}))));
+[...institutosPublicos,...institutosPrivados].forEach(inst=>inst.carreras.forEach(c=>indiceGlobal.push({carrera:c,facultad:t('nivelTecnico'),inst:inst.nombre,sigla:inst.sigla,color:inst.color,logo:inst.logo,tipo:'instituto',planSigla:null})));
 
 let contadorGlobal=0,mapInstance=null;
 
 /* ══ HELPERS ══ */
 function getPlan(carrera,sigla){if(sigla==='USFX')return PLANES_USFX[carrera]||null;if(PLANES_PRIVADAS[sigla])return PLANES_PRIVADAS[sigla][carrera]||null;return null}
-
-function volver(){
-  document.getElementById("contenido").innerHTML="";
-  document.getElementById("contenido").style.display="none";
-  document.getElementById("inicio").style.display="flex";
-  document.getElementById("contentTopbar").style.display="none";
-  mapInstance=null;
-}
-
+function volver(){document.getElementById("contenido").innerHTML="";document.getElementById("contenido").style.display="none";document.getElementById("inicio").style.display="flex";document.getElementById("contentTopbar").style.display="none";mapInstance=null}
 function initContenido(tituloHTML,badgeHTML){
   document.getElementById("inicio").style.display="none";
   document.getElementById("contentTopbar").style.display="block";
-  const darkLabel=modoOscuro?t('modoClaro'):t('modoOscuro');
-  ['darkLabelInicio','darkLabelContent'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=darkLabel});
+  const lb=modoOscuro?t('modoClaro'):t('modoOscuro');
+  ['darkLabelInicio','darkLabelContent'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=lb});
   const cont=document.getElementById("contenido");
   cont.style.display="block";
   cont.innerHTML=`<button class="volver" onclick="volver()"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>${t('volver')}</button>${tituloHTML}${badgeHTML}`;
@@ -471,26 +499,231 @@ function initContenido(tituloHTML,badgeHTML){
 }
 
 /* ══ MODAL ══ */
-function abrirModal(carrera,uniNombre,color,sigla){
-  const plan=getPlan(carrera,sigla);
-  document.getElementById("modalCarreraNombre").textContent=carrera;
-  document.getElementById("modalUniNombre").textContent=uniNombre;
-  const bd=document.getElementById("modalBadges");
-  if(plan&&plan.length){const tot=plan.reduce((s,c)=>s+c.materias.length,0);bd.innerHTML=`<span class="modal-badge" style="background:${color}">${sigla}</span><span class="modal-badge-stat">${plan.length} ${t('semestre')}s</span><span class="modal-badge-stat">${tot} ${t('totalMaterias')}</span>`}
-  else{bd.innerHTML=`<span class="modal-badge" style="background:${color}">${sigla}</span>`}
-  const tabsDiv=document.getElementById("modalTabs"),bodyDiv=document.getElementById("modalBody");
-  tabsDiv.innerHTML="";bodyDiv.innerHTML="";
-  if(!plan||!plan.length){bodyDiv.innerHTML=`<div class="plan-empty">${t('sinPlan')}</div>`;document.getElementById("modalOverlay").classList.remove("hidden");document.body.style.overflow="hidden";return}
-  plan.forEach((c,idx)=>{
-    const tab=document.createElement("button");tab.className="modal-tab"+(idx===0?" activo":"");tab.textContent=`${t('semestre')} ${c.curso}`;
-    tab.onclick=()=>{document.querySelectorAll(".modal-tab").forEach(b=>b.classList.remove("activo"));document.querySelectorAll(".modal-tab-content").forEach(d=>d.classList.remove("visible"));tab.classList.add("activo");document.getElementById("tc-"+idx).classList.add("visible")};
+let _modalPlanActual = null; // guarda {carrera, uniNombre, sigla, color, plan} para el PDF
+
+function abrirModal(carrera, uniNombre, color, sigla){
+  const plan = getPlan(carrera, sigla);
+  _modalPlanActual = {carrera, uniNombre, sigla, color, plan};
+
+  document.getElementById("modalCarreraNombre").textContent = carrera;
+  document.getElementById("modalUniNombre").textContent = uniNombre;
+
+  const bd = document.getElementById("modalBadges");
+  const svgPDF = `<svg viewBox="0 0 24 24"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM9 9.5h1v-1H9v1zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm10 5.5h1v-3h-1v3z"/></svg>`;
+
+  if(plan && plan.length){
+    const tot = plan.reduce((s,c)=>s+c.materias.length, 0);
+    bd.innerHTML = `
+      <span class="modal-badge" style="background:${color}">${sigla}</span>
+      <span class="modal-badge-stat">${plan.length} ${t('semestre')}s</span>
+      <span class="modal-badge-stat">${tot} ${t('totalMaterias')}</span>
+      <button class="btn-pdf" onclick="descargarPlanPDF()" title="Descargar PDF">${svgPDF} Descargar PDF</button>`;
+  } else {
+    bd.innerHTML = `<span class="modal-badge" style="background:${color}">${sigla}</span>`;
+  }
+
+  const tabsDiv = document.getElementById("modalTabs");
+  const bodyDiv = document.getElementById("modalBody");
+  tabsDiv.innerHTML = ""; bodyDiv.innerHTML = "";
+
+  if(!plan || !plan.length){
+    bodyDiv.innerHTML = `<div class="plan-empty">${t('sinPlan')}</div>`;
+    document.getElementById("modalOverlay").classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+    return;
+  }
+
+  plan.forEach((c, idx) => {
+    const tab = document.createElement("button");
+    tab.className = "modal-tab" + (idx===0 ? " activo" : "");
+    tab.textContent = `${t('semestre')} ${c.curso}`;
+    tab.onclick = () => {
+      document.querySelectorAll(".modal-tab").forEach(b=>b.classList.remove("activo"));
+      document.querySelectorAll(".modal-tab-content").forEach(d=>d.classList.remove("visible"));
+      tab.classList.add("activo");
+      document.getElementById("tc-"+idx).classList.add("visible");
+    };
     tabsDiv.appendChild(tab);
-    const div=document.createElement("div");div.className="modal-tab-content"+(idx===0?" visible":"");div.id="tc-"+idx;
-    div.innerHTML=`<table class="plan-tabla"><thead><tr><th style="width:30px">#</th><th style="width:105px">Código</th><th>${t('materias')} (${c.materias.length})</th></tr></thead><tbody>${c.materias.map((m,i)=>`<tr><td class="plan-num">${i+1}</td><td class="plan-cod">${m.cod||'—'}</td><td>${m.nom}</td></tr>`).join('')}</tbody></table>`;
+
+    const div = document.createElement("div");
+    div.className = "modal-tab-content" + (idx===0 ? " visible" : "");
+    div.id = "tc-" + idx;
+    div.innerHTML = `<table class="plan-tabla">
+      <thead><tr>
+        <th style="width:30px">#</th>
+        <th style="width:105px">Código</th>
+        <th>${t('materias')} (${c.materias.length})</th>
+      </tr></thead>
+      <tbody>${c.materias.map((m,i)=>`<tr>
+        <td class="plan-num">${i+1}</td>
+        <td class="plan-cod">${m.cod||'—'}</td>
+        <td>${m.nom}</td>
+      </tr>`).join('')}</tbody>
+    </table>`;
     bodyDiv.appendChild(div);
   });
-  document.getElementById("modalOverlay").classList.remove("hidden");document.body.style.overflow="hidden";
+
+  document.getElementById("modalOverlay").classList.remove("hidden");
+  document.body.style.overflow = "hidden";
 }
+
+/* ══ DESCARGA PDF ══ */
+function descargarPlanPDF(){
+  const { jsPDF } = window.jspdf;
+  if(!_modalPlanActual || !_modalPlanActual.plan) return;
+  const { carrera, uniNombre, sigla, color, plan } = _modalPlanActual;
+
+  const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+  const W = doc.internal.pageSize.getWidth();
+  const H = doc.internal.pageSize.getHeight();
+  const margin = 18;
+
+  // ── Convierte color hex a [r,g,b]
+  function hexRGB(hex){
+    const h = hex.replace('#','');
+    return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
+  }
+  const [r,g,b] = hexRGB(color || '#1E1510');
+
+  // ── ENCABEZADO con banda de color
+  doc.setFillColor(r,g,b);
+  doc.rect(0, 0, W, 38, 'F');
+
+  // Franja inferior decorativa
+  doc.setFillColor(r*0.7, g*0.7, b*0.7);
+  doc.rect(0, 38, W, 3, 'F');
+
+  // Sigla en la banda
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(9);
+  doc.text(sigla, margin, 12);
+
+  // Nombre universidad
+  doc.setFontSize(10);
+  doc.setFont('helvetica','normal');
+  const uniLines = doc.splitTextToSize(uniNombre, W - margin*2 - 30);
+  doc.text(uniLines, margin, 21);
+
+  // Nombre carrera grande
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(15);
+  const carreraLines = doc.splitTextToSize(carrera, W - margin*2);
+  doc.text(carreraLines, margin, 32);
+
+  // Logo ExploraU texto en esquina
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(8);
+  doc.setTextColor(255,255,255);
+  doc.text('ExploraU', W - margin, 12, {align:'right'});
+
+  // ── ESTADÍSTICAS RESUMEN
+  const totalMaterias = plan.reduce((s,c)=>s+c.materias.length,0);
+  doc.setTextColor(80,80,80);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(8.5);
+  doc.text(`Plan de Estudios  ·  ${plan.length} semestres  ·  ${totalMaterias} materias en total`, margin, 48);
+
+  // Línea divisoria
+  doc.setDrawColor(220,210,190);
+  doc.setLineWidth(0.4);
+  doc.line(margin, 51, W-margin, 51);
+
+  // ── TABLAS POR SEMESTRE
+  let cursorY = 56;
+
+  plan.forEach((semestre, sIdx) => {
+    // Verificar espacio — nueva página si hace falta
+    if(cursorY > H - 30){
+      doc.addPage();
+      // mini encabezado en páginas siguientes
+      doc.setFillColor(r,g,b);
+      doc.rect(0,0,W,12,'F');
+      doc.setTextColor(255,255,255);
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(8);
+      doc.text(`${sigla} — ${carrera}`, margin, 8);
+      doc.text('ExploraU', W-margin, 8, {align:'right'});
+      cursorY = 20;
+    }
+
+    // Título del semestre
+    doc.setFillColor(r,g,b);
+    doc.roundedRect(margin, cursorY, W - margin*2, 8, 2, 2, 'F');
+    doc.setTextColor(255,255,255);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(9);
+    doc.text(`Semestre ${semestre.curso}`, margin+4, cursorY+5.5);
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(8);
+    doc.text(`${semestre.materias.length} materias`, W-margin-4, cursorY+5.5, {align:'right'});
+    cursorY += 10;
+
+    // Tabla de materias
+    const rows = semestre.materias.map((m,i) => [
+      String(i+1),
+      m.cod || '—',
+      m.nom
+    ]);
+
+    doc.autoTable({
+      startY: cursorY,
+      head: [['#','Código','Materia']],
+      body: rows,
+      margin: { left: margin, right: margin },
+      styles: {
+        fontSize: 8,
+        cellPadding: 2.8,
+        textColor: [50,40,30],
+        lineColor: [220,210,190],
+        lineWidth: 0.3,
+      },
+      headStyles: {
+        fillColor: [245,239,224],
+        textColor: [80,60,40],
+        fontStyle: 'bold',
+        fontSize: 7.5,
+      },
+      alternateRowStyles: { fillColor: [252,250,246] },
+      columnStyles: {
+        0: { cellWidth: 10, halign:'center' },
+        1: { cellWidth: 28, textColor:[r,g,b], fontStyle:'bold' },
+        2: { cellWidth:'auto' }
+      },
+      didDrawPage: () => {
+        // mini encabezado en auto-páginas del autoTable
+        doc.setFillColor(r,g,b);
+        doc.rect(0,0,W,12,'F');
+        doc.setTextColor(255,255,255);
+        doc.setFont('helvetica','bold');
+        doc.setFontSize(8);
+        doc.text(`${sigla} — ${carrera}`, margin, 8);
+        doc.text('ExploraU', W-margin, 8, {align:'right'});
+      }
+    });
+
+    cursorY = doc.lastAutoTable.finalY + 8;
+  });
+
+  // ── PIE DE PÁGINA en última página
+  const totalPages = doc.internal.getNumberOfPages();
+  for(let p=1; p<=totalPages; p++){
+    doc.setPage(p);
+    doc.setDrawColor(220,210,190);
+    doc.setLineWidth(0.3);
+    doc.line(margin, H-12, W-margin, H-12);
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(150,140,130);
+    doc.text('ExploraU — Guía Universitaria de Sucre, Bolivia', margin, H-7);
+    doc.text(`Página ${p} de ${totalPages}`, W-margin, H-7, {align:'right'});
+  }
+
+  // ── DESCARGAR
+  const filename = `Plan_${sigla}_${carrera.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]/g,'').trim().replace(/\s+/g,'_')}.pdf`;
+  doc.save(filename);
+}
+
 function cerrarModal(e){if(e&&e.target!==document.getElementById("modalOverlay"))return;document.getElementById("modalOverlay").classList.add("hidden");document.body.style.overflow=""}
 document.addEventListener("keydown",e=>{if(e.key==="Escape")cerrarModal()});
 
@@ -500,6 +733,39 @@ function filtrar(tipo){
   const totalCar=lista.reduce((s,u)=>s+u.facultades.reduce((sf,f)=>sf+f.carreras.length,0),0);
   const titulo=tipo==='publica'?t('tituloPublica'):t('tituloPrivada');
   const cont=initContenido(`<h2 class="seccion-titulo">${titulo}</h2>`,`<span class="seccion-badge ${tipo==='publica'?'badge-publica':'badge-privada'}">${lista.length} ${t('instituciones')} · ${totalCar} ${t('carreras')}</span>`);
+
+  /* USFX VIRTUAL — solo en sección pública */
+  if(tipo==='publica'){
+    const virtualCarreras=["Psicología","Gerencia y Administración Pública","Derecho","Filosofía","Contaduría Pública","Ingeniería de Sistemas"];
+    const vCard=document.createElement("div");vCard.className="virtual-card";
+    vCard.innerHTML=`
+      <div class="virtual-header">
+        <div class="virtual-icon-wrap"><svg viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2H6v2h12v-2h-2v-2h5c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14H3V5h18v12zM7 15l1.41-1.41L10 15.17l5.59-5.59L17 11l-7 7z"/></svg></div>
+        <div class="virtual-info">
+          <div class="virtual-nombre">USFX Virtual
+            <span class="virtual-sigla">USFX</span>
+          </div>
+          <span class="virtual-badge-new">✦ ${t('virtualNuevo')}</span>
+        </div>
+        <span class="virtual-tipo">🖥 Modalidad Virtual</span>
+      </div>
+      <div class="virtual-body">
+        <p class="virtual-desc">${t('virtualDesc')}</p>
+        <div class="virtual-carreras-grid">
+          ${virtualCarreras.map(c=>`<div class="virtual-carrera-item"><span class="virtual-carrera-dot"></span><span class="virtual-carrera-txt">${c}</span></div>`).join('')}
+        </div>
+      </div>
+      <div class="virtual-footer">
+        <div class="virtual-stat"><div class="virtual-stat-num">${virtualCarreras.length}</div><div class="virtual-stat-label">${t('carreras')}</div></div>
+        <div class="virtual-stat"><div class="virtual-stat-num">100%</div><div class="virtual-stat-label">Online</div></div>
+        <div class="virtual-contacto">
+          ${mkFbBtn("https://www.facebook.com/FranciscoXavierCh")}
+          ${mkWaBtn("")}
+        </div>
+      </div>`;
+    cont.appendChild(vCard);
+  }
+
   lista.forEach((u,idx)=>{
     const numFac=u.facultades.length,numCar=u.facultades.reduce((s,f)=>s+f.carreras.length,0);
     const card=document.createElement("div");card.className="card";card.style.cssText=`border-top-color:${u.color};animation:fadeUp .5s ease ${idx*.1}s both`;
@@ -509,7 +775,25 @@ function filtrar(tipo){
       const crHTML=f.carreras.map(c=>{const plan=getPlan(c,u.sigla);const tp=plan&&plan.length>0;return tp?`<li class="carrera-item" onclick="abrirModal('${c.replace(/'/g,"\\'")}','${u.nombre.replace(/'/g,"\\'")}','${u.color}','${u.sigla}')"><span class="carrera-link-txt">${c}</span><svg style="width:11px;height:11px;fill:var(--clay);flex-shrink:0;margin-left:auto" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg></li>`:`<li>${c}</li>`}).join('');
       facHTML+=`<div class="facultad" id="wrap${cid}"><div class="facultad-header" onclick="toggle(${cid})"><span class="fac-icon" style="background:${u.color}"></span><span class="fac-nombre">${f.nombre}</span><svg class="fac-chevron" viewBox="0 0 24 24" fill="currentColor"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></div><ul class="carreras" id="fac${cid}" style="border-left-color:${u.color}40">${crHTML}</ul></div>`;
     });
-    card.innerHTML=`<div class="card-header"><img src="${u.logo}" class="logo" alt="${u.sigla}" onerror="this.outerHTML='<div class=\\'logo-fallback\\' style=\\'background:${u.color}\\'>${u.sigla.charAt(0)}</div>'"><div class="card-info"><div class="card-nombre">${u.nombre}</div><span class="card-sigla" style="background:${u.color}">${u.sigla}</span><span style="font-size:.62rem;margin-left:8px;color:var(--clay);font-weight:700">📋 ${t('planEstudios')}</span></div><span class="card-tipo">${tipo==='publica'?'🏛 '+t('publica'):'🏫 '+t('privada')}</span></div><div class="card-body"><div class="card-facultades">${facHTML}</div><div class="card-imagen-wrap"><img src="${u.imagen}" class="imagen" alt="${u.nombre}" onerror="this.style.display='none'"></div></div><div class="card-stats"><div class="stat"><div class="stat-num">${numFac}</div><div class="stat-label">${t('facultades')}</div></div><div class="stat"><div class="stat-num">${numCar}</div><div class="stat-label">${t('carreras')}</div></div></div>`;
+    card.innerHTML=`
+      <div class="card-header">
+        <img src="${u.logo}" class="logo" alt="${u.sigla}" onerror="this.outerHTML='<div class=\\'logo-fallback\\' style=\\'background:${u.color}\\'>${u.sigla.charAt(0)}</div>'">
+        <div class="card-info">
+          <div class="card-nombre">${u.nombre}</div>
+          <span class="card-sigla" style="background:${u.color}">${u.sigla}</span>
+          <span style="font-size:.62rem;margin-left:8px;color:var(--clay);font-weight:700">📋 ${t('planEstudios')}</span>
+        </div>
+        <span class="card-tipo">${tipo==='publica'?'🏛 '+t('publica'):'🏫 '+t('privada')}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-facultades">${facHTML}</div>
+        <div class="card-imagen-wrap"><img src="${u.imagen}" class="imagen" alt="${u.nombre}" onerror="this.style.display='none'"></div>
+      </div>
+      <div class="card-stats">
+        <div class="stat"><div class="stat-num">${numFac}</div><div class="stat-label">${t('facultades')}</div></div>
+        <div class="stat"><div class="stat-num">${numCar}</div><div class="stat-label">${t('carreras')}</div></div>
+      </div>
+      ${mkContactoBar(u.fb,u.wa,u.dir)}`;
     cont.appendChild(card);
   });
 }
@@ -520,14 +804,28 @@ function mostrarInstitutos(tipo){
   const lista=tipo==='publico'?institutosPublicos:institutosPrivados;
   const titulo=tipo==='publico'?t('tituloInstPub'):t('tituloInstPriv');
   const badge=tipo==='publico'?'badge-inst-pub':'badge-inst-priv';
-  const colorAccent=tipo==='publico'?'#0a5a50':'#3c2878';
   const totalCar=lista.reduce((s,i)=>s+i.carreras.length,0);
   const cont=initContenido(`<h2 class="seccion-titulo">${titulo}</h2>`,`<span class="seccion-badge ${badge}">${lista.length} ${t('institutos')} · ${totalCar} ${t('carreras')}</span>`);
   const grid=document.createElement("div");grid.className="inst-grid";
   lista.forEach((inst,idx)=>{
     const card=document.createElement("div");card.className="inst-card";card.style.cssText=`border-left-color:${inst.color};animation:fadeUp .4s ease ${idx*.07}s both`;
-    const liItems=inst.carreras.map(c=>`<li style="--dot-color:${inst.color}"><style>.inst-carreras-lista li::before{background:var(--dot-color,var(--gold))}</style>${c}</li>`).join('');
-    card.innerHTML=`<div class="inst-header"><img src="${inst.logo}" class="inst-logo" alt="${inst.sigla}" onerror="this.outerHTML='<div class=\\'inst-logo-fb\\' style=\\'background:${inst.color}\\'>${inst.sigla.charAt(0)}</div>'"><div class="inst-info"><div class="inst-nombre">${inst.nombre}</div><span class="inst-sigla" style="background:${inst.color}">${inst.sigla}</span></div></div><ul class="inst-carreras-lista">${inst.carreras.map(c=>`<li style="border-bottom-color:var(--border-color)"><span style="width:5px;height:5px;border-radius:50%;background:${inst.color};flex-shrink:0;display:inline-block;margin-right:6px"></span>${c}</li>`).join('')}</ul><div class="inst-footer"><span class="inst-tipo-badge">${tipo==='publico'?'🏛 '+t('publico'):'🏫 '+t('privado')}</span><div style="text-align:right"><div class="inst-count">${inst.carreras.length}</div><div class="inst-count-label">${t('carreras')}</div></div></div>`;
+    card.innerHTML=`
+      <div class="inst-card-body">
+        <div class="inst-header">
+          <img src="${inst.logo}" class="inst-logo" alt="${inst.sigla}" onerror="this.outerHTML='<div class=\\'inst-logo-fb\\' style=\\'background:${inst.color}\\'>${inst.sigla.charAt(0)}</div>'">
+          <div class="inst-info">
+            <div class="inst-nombre">${inst.nombre}</div>
+            <span class="inst-sigla" style="background:${inst.color}">${inst.sigla}</span>
+          </div>
+        </div>
+        <ul class="inst-carreras-lista">
+          ${inst.carreras.map(c=>`<li><span style="width:5px;height:5px;border-radius:50%;background:${inst.color};flex-shrink:0;display:inline-block"></span>${c}</li>`).join('')}
+        </ul>
+      </div>
+      <div class="inst-contacto-bar">
+        <div class="inst-dir"><svg viewBox="0 0 24 24" style="fill:var(--muted)">${SVG_PIN.replace('<svg viewBox="0 0 24 24">','').replace('</svg>','')}</svg><span>${inst.dir}</span></div>
+        <div class="inst-btns">${mkFbBtn(inst.fb)}${mkWaBtn(inst.wa)}</div>
+      </div>`;
     grid.appendChild(card);
   });
   cont.appendChild(grid);
@@ -536,7 +834,7 @@ function mostrarInstitutos(tipo){
 /* ══ MÓDULO: BUSCADOR ══ */
 function mostrarBuscador(){
   const tot=indiceGlobal.length;
-  const cont=initContenido(`<h2 class="seccion-titulo">${t('tituloBuscador')}</h2>`,`<span class="seccion-badge badge-buscador">${tot} ${t('carreras')} · ${universidades.length+institutosPrivados.length+institutosPublicos.length} ${t('instituciones')}</span>`);
+  const cont=initContenido(`<h2 class="seccion-titulo">${t('tituloBuscador')}</h2>`,`<span class="seccion-badge badge-buscador">${tot} ${t('carreras')} · ${universidades.length+institutosPublicos.length+institutosPrivados.length} ${t('instituciones')}</span>`);
   const wrap=document.createElement("div");
   wrap.innerHTML=`<div class="buscador-wrap"><input class="buscador-input" type="text" id="inputBusqueda" placeholder="${t('placeholder')}" oninput="buscar(this.value)" autocomplete="off"><span class="buscador-icon"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></span></div><div class="busqueda-stats" id="busquedaStats" style="display:none">${t('mostrando')} <span class="busqueda-num" id="busquedaNum">0</span> ${t('resultados')}</div><div id="resultadosGrid" class="resultados-grid"></div><div id="busquedaVacia" class="busqueda-vacia" style="display:none"><svg viewBox="0 0 24 24"><path d="M11 15h2v2h-2v-2zm0-8h2v6h-2V7zm1-5C6.47 2 2 6.5 2 12a10 10 0 0010 10 10 10 0 0010-10A10 10 0 0012 2zm0 18a8 8 0 01-8-8 8 8 0 018-8 8 8 0 018 8 8 8 0 01-8 8z"/></svg><p>${t('sinResultados')}</p><small>${t('intentaOtro')}</small></div><div id="busquedaInicio" class="busqueda-inicio"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg><p>${t('buscarTexto')}</p><small>${t('buscarSub')}</small></div>`;
   cont.appendChild(wrap);
@@ -552,12 +850,11 @@ function buscar(query){
   vacia.style.display="none";sw.style.display="flex";sn.textContent=res.length;
   const regex=new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi');
   res.forEach((item,idx)=>{
-    const plan=item.planKey?getPlan(item.planKey,item.planSigla):null;const tp=plan&&plan.length>0;
+    const plan=item.planSigla?getPlan(item.carrera,item.planSigla):null;const tp=plan&&plan.length>0;
     const div=document.createElement("div");div.className="resultado-card"+(tp?" clickeable":"");div.style.cssText=`border-left-color:${item.color};animation-delay:${idx*.04}s`;
     if(tp)div.onclick=()=>abrirModal(item.carrera,item.inst,item.color,item.planSigla);
     const hl=item.carrera.replace(regex,'<mark style="background:rgba(196,154,34,.4);border-radius:3px;padding:0 2px">$1</mark>');
-    const tipoLabel=item.tipo==='universidad'?'🎓 Universidad':'🏫 Instituto';
-    div.innerHTML=`<img src="${item.logo}" class="res-logo" alt="${item.sigla}" onerror="this.outerHTML='<div class=\\'res-logo-fb\\' style=\\'background:${item.color}\\'>${item.sigla.charAt(0)}</div>'"><div class="res-info"><div class="res-carrera">${hl}</div><div class="res-uni">${item.inst}</div><span class="res-sigla" style="background:${item.color}">${item.sigla}</span><div class="res-fac" style="margin-top:3px">${tipoLabel}</div>${tp?`<div class="res-plan-badge">📋 ${t('verPlan')}</div>`:''}</div>`;
+    div.innerHTML=`<img src="${item.logo}" class="res-logo" alt="${item.sigla}" onerror="this.outerHTML='<div class=\\'res-logo-fb\\' style=\\'background:${item.color}\\'>${item.sigla.charAt(0)}</div>'"><div class="res-info"><div class="res-carrera">${hl}</div><div class="res-uni">${item.inst}</div><span class="res-sigla" style="background:${item.color}">${item.sigla}</span><div class="res-fac" style="margin-top:3px">${item.tipo==='universidad'?'🎓 Universidad':'🏫 Instituto'}</div>${tp?`<div class="res-plan-badge">📋 ${t('verPlan')}</div>`:''}</div>`;
     grid.appendChild(div);
   });
 }
@@ -588,7 +885,353 @@ function seleccionarUni(sigla){
   document.getElementById("mapaPlaceholder").style.display="none";
   const infoDiv=document.getElementById("mapaInfoUni");infoDiv.className="mapa-info-uni visible";
   const numCar=u.facultades.reduce((s,f)=>s+f.carreras.length,0);
-  infoDiv.innerHTML=`<div class="mapa-info-nombre">${u.nombre}</div><span class="mapa-info-sigla" style="background:${u.color}">${u.sigla}</span><div class="mapa-info-fila"><span class="mapa-info-label">${t('tipo')}</span><span class="mapa-info-valor">${u.tipo==='publica'?'🏛 '+t('publica'):'🏫 '+t('privada')}</span></div><div class="mapa-info-fila"><span class="mapa-info-label">${t('facultades')}</span><span class="mapa-info-valor">${u.facultades.length}</span></div><div class="mapa-info-fila"><span class="mapa-info-label">${t('carreras')}</span><span class="mapa-info-valor">${numCar}</span></div><div class="mapa-info-fila"><span class="mapa-info-label">${t('ranking')}</span><span class="mapa-info-valor">#${u.ranking}</span></div><div class="mapa-info-fila"><span class="mapa-info-label">${t('coords')}</span><span class="mapa-info-valor" style="font-size:.68rem">${u.coords[0].toFixed(4)}, ${u.coords[1].toFixed(4)}</span></div>`;
+  infoDiv.innerHTML=`<div class="mapa-info-nombre">${u.nombre}</div><span class="mapa-info-sigla" style="background:${u.color}">${u.sigla}</span>
+    <div class="mapa-info-fila"><span class="mapa-info-label">${t('tipo')}</span><span class="mapa-info-valor">${u.tipo==='publica'?'🏛 '+t('publica'):'🏫 '+t('privada')}</span></div>
+    <div class="mapa-info-fila"><span class="mapa-info-label">${t('facultades')}</span><span class="mapa-info-valor">${u.facultades.length}</span></div>
+    <div class="mapa-info-fila"><span class="mapa-info-label">${t('carreras')}</span><span class="mapa-info-valor">${numCar}</span></div>
+    <div class="mapa-info-fila"><span class="mapa-info-label">${t('ranking')}</span><span class="mapa-info-valor">#${u.ranking}</span></div>
+    <div class="mapa-info-fila"><span class="mapa-info-label">${t('direccion')}</span><span class="mapa-info-valor" style="font-size:.7rem;text-align:right;max-width:160px">${u.dir}</span></div>
+    <div style="display:flex;gap:8px;margin-top:12px;justify-content:center">${mkFbBtn(u.fb)}${mkWaBtn(u.wa)}</div>`;
+}
+</script>
+
+<!-- ══ BOTÓN FLOTANTE TEST VOCACIONAL ══ -->
+<button class="fab-test" onclick="abrirTest()" id="fabTest" title="Test Vocacional">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+  <span>Test Vocacional</span>
+</button>
+
+<!-- ══ MODAL TEST VOCACIONAL ══ -->
+<div class="test-overlay hidden" id="testOverlay">
+  <div class="test-modal" id="testModal">
+    <button class="test-close" onclick="cerrarTest()">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <div id="testContenido"></div>
+  </div>
+</div>
+
+<style>
+/* ── FAB BUTTON ── */
+.fab-test{
+  position:fixed;bottom:28px;right:28px;z-index:600;
+  display:flex;align-items:center;gap:10px;
+  padding:14px 22px;
+  background:linear-gradient(135deg,#C49A22,#E8B84B);
+  color:#1E1510;border:none;border-radius:50px;
+  font-family:'Lato',sans-serif;font-size:.82rem;font-weight:700;
+  letter-spacing:1.2px;text-transform:uppercase;
+  cursor:pointer;box-shadow:0 6px 28px rgba(196,154,34,.5);
+  transition:transform .25s,box-shadow .25s;
+  animation:fabPulse 3s ease-in-out infinite;
+}
+.fab-test svg{width:22px;height:22px;flex-shrink:0}
+.fab-test:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 12px 36px rgba(196,154,34,.6)}
+.fab-test:active{transform:scale(.97)}
+@keyframes fabPulse{0%,100%{box-shadow:0 6px 28px rgba(196,154,34,.5)}50%{box-shadow:0 6px 40px rgba(196,154,34,.8),0 0 0 8px rgba(196,154,34,.1)}}
+
+/* ── MODAL OVERLAY ── */
+.test-overlay{position:fixed;inset:0;background:rgba(10,6,3,.8);z-index:900;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px);animation:fadeIn .2s ease}
+.test-overlay.hidden{display:none}
+.test-modal{background:var(--card-bg);border-radius:var(--radius-lg);width:100%;max-width:700px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.45);position:relative;animation:slideIn .3s ease}
+.test-close{position:absolute;top:16px;right:16px;z-index:10;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--border-color);background:var(--card-bg);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:background .2s,color .2s}
+.test-close:hover{background:var(--clay);color:white;border-color:var(--clay)}
+.test-close svg{width:17px;height:17px}
+
+/* ── PANTALLA BIENVENIDA ── */
+.test-welcome{padding:40px 36px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px}
+.test-welcome-icon{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#C49A22,#E8B84B);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(196,154,34,.4)}
+.test-welcome-icon svg{width:36px;height:36px;fill:#1E1510}
+.test-welcome h2{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--dark);line-height:1.2}
+.test-welcome p{font-size:.9rem;color:var(--muted);line-height:1.7;max-width:480px}
+.test-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:4px}
+.test-chip{padding:4px 14px;border-radius:20px;font-size:.72rem;font-weight:700;letter-spacing:1px;color:white}
+.test-start-btn{margin-top:8px;padding:14px 40px;background:linear-gradient(135deg,#C49A22,#E8B84B);color:#1E1510;border:none;border-radius:50px;font-family:'Lato',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;box-shadow:0 6px 20px rgba(196,154,34,.4);transition:transform .2s,box-shadow .2s}
+.test-start-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(196,154,34,.5)}
+
+/* ── PANTALLA PREGUNTAS ── */
+.test-q-wrap{display:flex;flex-direction:column;height:100%;overflow:hidden}
+.test-progress-bar-wrap{padding:20px 28px 0;flex-shrink:0}
+.test-progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.test-prog-label{font-size:.75rem;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.test-prog-num{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--dark)}
+.test-progress-bar{height:6px;background:var(--border-color);border-radius:3px;overflow:hidden}
+.test-progress-fill{height:100%;background:linear-gradient(90deg,#C49A22,#E8B84B);border-radius:3px;transition:width .4s ease}
+.test-q-body{flex:1;overflow-y:auto;padding:24px 28px 20px}
+.test-q-text{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;color:var(--dark);line-height:1.5;margin-bottom:20px}
+.test-options{display:flex;flex-direction:column;gap:10px}
+.test-option{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border-radius:var(--radius-sm);border:2px solid var(--border-color);background:transparent;cursor:pointer;text-align:left;transition:all .2s;width:100%;font-family:'Lato',sans-serif}
+.test-option:hover{border-color:var(--gold);background:rgba(196,154,34,.06)}
+.test-option.selected{border-color:var(--gold);background:rgba(196,154,34,.1)}
+.test-option-letter{width:28px;height:28px;border-radius:50%;background:var(--parchment);color:var(--muted);font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+[data-theme="dark"] .test-option-letter{background:rgba(255,255,255,.08)}
+.test-option.selected .test-option-letter{background:var(--gold);color:#1E1510}
+.test-option-txt{font-size:.87rem;color:var(--ink);line-height:1.45;padding-top:4px}
+.test-q-footer{padding:16px 28px;border-top:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.test-nav-btn{padding:10px 24px;border-radius:50px;border:1.5px solid var(--border-color);background:transparent;color:var(--muted);font-family:'Lato',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .2s}
+.test-nav-btn:hover{border-color:var(--clay);color:var(--clay)}
+.test-nav-btn.primary{background:linear-gradient(135deg,#C49A22,#E8B84B);color:#1E1510;border-color:transparent;box-shadow:0 4px 14px rgba(196,154,34,.4)}
+.test-nav-btn.primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(196,154,34,.5)}
+.test-nav-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+
+/* ── PANTALLA RESULTADOS ── */
+.test-results{padding:28px 32px;overflow-y:auto;flex:1}
+.test-results-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--dark);margin-bottom:4px;text-align:center}
+.test-results-sub{font-size:.82rem;color:var(--muted);text-align:center;margin-bottom:24px}
+.test-area-card{border-radius:var(--radius-md);overflow:hidden;margin-bottom:16px;box-shadow:0 4px 16px var(--shadow)}
+.test-area-header{padding:16px 20px;display:flex;align-items:center;gap:14px}
+.test-area-rank{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:white;flex-shrink:0}
+.test-area-info{flex:1}
+.test-area-nombre{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:white}
+.test-area-pct{font-size:.75rem;color:rgba(255,255,255,.8);margin-top:2px}
+.test-area-bar-wrap{height:6px;background:rgba(255,255,255,.2);border-radius:3px;overflow:hidden;margin-top:8px;width:100%}
+.test-area-bar-fill{height:100%;background:rgba(255,255,255,.7);border-radius:3px}
+.test-area-body{padding:16px 20px;background:var(--card-bg);border:1px solid var(--border-color);border-top:none;border-radius:0 0 var(--radius-md) var(--radius-md)}
+.test-area-desc{font-size:.82rem;color:var(--muted);margin-bottom:14px;line-height:1.6}
+.test-carreras-title{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px}
+.test-carrera-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:.78rem;font-weight:700;color:white;margin:3px 4px 3px 0}
+.test-reiniciar{display:block;margin:20px auto 0;padding:11px 32px;background:transparent;border:1.5px solid var(--clay);color:var(--clay);border-radius:50px;font-family:'Lato',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.test-reiniciar:hover{background:var(--clay);color:white}
+
+@media(max-width:480px){.test-welcome{padding:28px 20px}.test-welcome h2{font-size:1.4rem}.test-q-body{padding:18px 16px}.test-q-footer{padding:12px 16px}.test-progress-bar-wrap{padding:16px 16px 0}.test-results{padding:20px 16px}}
+</style>
+
+<script>
+/* ══ TEST VOCACIONAL ══ */
+
+const AREAS = {
+  TEC: { nombre:"Tecnología e Informática", color:"#1565C0", emoji:"💻",
+    desc:"Tienes afinidad por los sistemas, la lógica y la innovación digital. Te atrae resolver problemas con herramientas tecnológicas y construir soluciones.",
+    carreras:[{n:"Ingeniería de Sistemas",i:"USFX / UPDS / UCB"},{n:"Ingeniería en Ciencias de la Computación",i:"USFX"},{n:"Ingeniería en Ciberseguridad",i:"USFX"},{n:"Sistemas Informáticos",i:"ITSEC / INFOCAL / ITEC"},{n:"Telecomunicaciones",i:"TECBA"}]},
+  ING: { nombre:"Ingeniería y Construcción", color:"#E65100", emoji:"⚙️",
+    desc:"Te inclinas por lo técnico, el diseño de estructuras y el trabajo con maquinaria. Disfrutas los retos físicos y la precisión matemática.",
+    carreras:[{n:"Ingeniería Civil",i:"USFX / UNIVALLE / UPDS"},{n:"Ingeniería Mecánica / Mecatrónica",i:"USFX"},{n:"Ingeniería Eléctrica / Electrónica",i:"USFX / TESLAVI"},{n:"Ingeniería Industrial",i:"USFX / UPDS"},{n:"Construcción Civil",i:"TECBA"}]},
+  SAL: { nombre:"Salud y Ciencias Biomédicas", color:"#2E7D32", emoji:"🏥",
+    desc:"Sientes vocación de ayudar a los demás cuidando su salud. Te interesa la biología humana, la medicina y el bienestar de las personas.",
+    carreras:[{n:"Medicina",i:"USFX / UPDS / UBI"},{n:"Odontología",i:"USFX"},{n:"Enfermería",i:"USFX / ENTEC"},{n:"Kinesiología y Fisioterapia",i:"USFX / UPDS"},{n:"Farmacia y Bioquímica",i:"USFX"}]},
+  NEG: { nombre:"Negocios y Administración", color:"#6A1B9A", emoji:"📊",
+    desc:"Tu fuerte es organizar, liderar y tomar decisiones estratégicas. Disfrutas el mundo empresarial, las finanzas y el emprendimiento.",
+    carreras:[{n:"Administración de Empresas",i:"USFX / UNIVALLE / UCB"},{n:"Ingeniería Comercial",i:"USFX / UPDS / UNIVALLE"},{n:"Contaduría Pública",i:"USFX / UPDS"},{n:"Marketing y Publicidad",i:"UPDS / ITEC / TECBA"},{n:"Gestión Pública",i:"USFX"}]},
+  SOC: { nombre:"Ciencias Sociales y Humanas", color:"#00838F", emoji:"🤝",
+    desc:"Te apasiona entender a las personas, la sociedad y sus dinámicas. Valoras la justicia, la comunicación y el trabajo comunitario.",
+    carreras:[{n:"Derecho",i:"USFX / UNIVALLE / UPDS"},{n:"Psicología",i:"USFX / UNIVALLE / UPDS"},{n:"Trabajo Social",i:"USFX / UBI"},{n:"Sociología / Historia",i:"USFX"},{n:"Comunicación Social",i:"USFX"}]},
+  ART: { nombre:"Arte, Diseño y Creatividad", color:"#C62828", emoji:"🎨",
+    desc:"Eres una persona visual y creativa. Disfrutas expresarte a través del arte, el diseño y la estética. Piensas en imágenes y formas.",
+    carreras:[{n:"Arquitectura",i:"USFX / UNIVALLE / UBI"},{n:"Diseño Gráfico / Multimedia",i:"USFX / ITEC / TECBA"},{n:"Arte y Diseño Gráfico",i:"USFX"},{n:"Diseño de Interiores",i:"USFX / TECBA"},{n:"Diseño Gráfico Multimedia",i:"ITEC"}]},
+  ALI: { nombre:"Gastronomía y Hotelería", color:"#B8860B", emoji:"🍳",
+    desc:"Te entusiasma el mundo culinario, la hospitalidad y la creación de experiencias. Eres detallista y disfrutas trabajar con personas.",
+    carreras:[{n:"Gastronomía",i:"INFOCAL / IGA / ENTEC / USFX"},{n:"Pastelería y Panadería",i:"IGA"},{n:"Turismo y Hotelería",i:"USFX / ITSEC"},{n:"Turismo, Hotelería y Gestión Cultural",i:"USFX"}]},
+  CIE: { nombre:"Ciencias Exactas y Naturales", color:"#1B5E20", emoji:"🔬",
+    desc:"Tu mente analítica disfruta los experimentos, las fórmulas y entender cómo funciona el mundo a nivel científico.",
+    carreras:[{n:"Ingeniería Química",i:"USFX"},{n:"Bioquímica / Biología",i:"USFX"},{n:"Ingeniería Ambiental",i:"USFX / UPDS"},{n:"Ingeniería en Biotecnología",i:"USFX"},{n:"Química Farmacéutica",i:"USFX"}]},
+  EDU: { nombre:"Educación e Idiomas", color:"#4527A0", emoji:"📚",
+    desc:"Tienes pasión por enseñar y comunicar. Disfrutas los idiomas, la pedagogía y ayudar a otros a aprender y crecer.",
+    carreras:[{n:"Pedagogía",i:"USFX"},{n:"Idiomas",i:"USFX"},{n:"Inglés",i:"CBA"},{n:"Parvulario",i:"ITARFA / INFOCAL / ENTEC"},{n:"Secretariado Ejecutivo",i:"ITSEC / ITARFA / CCA"}]}
+};
+
+const PREGUNTAS = [
+  { texto:"¿Qué actividad disfrutarías más en un proyecto escolar?",
+    opciones:[{t:"Programar una app o página web",a:"TEC"},{t:"Construir una maqueta estructural",a:"ING"},{t:"Organizar el equipo y los recursos",a:"NEG"},{t:"Diseñar los carteles y la presentación",a:"ART"}]},
+  { texto:"Si pudieras elegir tu trabajo ideal, ¿cuál de estos te emociona más?",
+    opciones:[{t:"Trabajar en un hospital o clínica",a:"SAL"},{t:"Diseñar edificios o espacios",a:"ART"},{t:"Analizar datos y tomar decisiones de negocio",a:"NEG"},{t:"Investigar fenómenos químicos o biológicos",a:"CIE"}]},
+  { texto:"¿Cuál de estas materias te resulta más interesante?",
+    opciones:[{t:"Matemáticas y lógica",a:"TEC"},{t:"Biología y ciencias naturales",a:"CIE"},{t:"Historia y ciencias sociales",a:"SOC"},{t:"Arte y expresión plástica",a:"ART"}]},
+  { texto:"¿Cómo prefieres resolver un problema complejo?",
+    opciones:[{t:"Usando fórmulas y algoritmos",a:"TEC"},{t:"Hablando con personas involucradas",a:"SOC"},{t:"Dibujando o esquematizando",a:"ART"},{t:"Experimentando con materiales físicos",a:"ING"}]},
+  { texto:"¿Cuál de estas actividades harías en tu tiempo libre?",
+    opciones:[{t:"Cocinar o explorar nuevas recetas",a:"ALI"},{t:"Leer libros de ciencia o tecnología",a:"CIE"},{t:"Escuchar o practicar idiomas",a:"EDU"},{t:"Diseñar logos o ilustraciones",a:"ART"}]},
+  { texto:"¿Qué tipo de personas admiras más?",
+    opciones:[{t:"Médicos y enfermeros que salvan vidas",a:"SAL"},{t:"Ingenieros que construyen grandes obras",a:"ING"},{t:"Emprendedores exitosos",a:"NEG"},{t:"Artistas y creativos reconocidos",a:"ART"}]},
+  { texto:"Si trabajaras en una empresa, ¿qué área elegiría tu perfil?",
+    opciones:[{t:"Tecnología y sistemas",a:"TEC"},{t:"Recursos humanos o comunicación",a:"SOC"},{t:"Contabilidad y finanzas",a:"NEG"},{t:"Marketing y diseño",a:"ART"}]},
+  { texto:"¿Qué habilidad tuya destacaría tu familia o amigos?",
+    opciones:[{t:"Eres muy organizado y líder",a:"NEG"},{t:"Eres empático y escuchas bien",a:"SOC"},{t:"Eres creativo e innovador",a:"ART"},{t:"Eres preciso y te gustan los detalles técnicos",a:"ING"}]},
+  { texto:"¿Cuál de estos logros te llenaría más de orgullo?",
+    opciones:[{t:"Crear una vacuna o tratamiento médico",a:"SAL"},{t:"Construir un puente o edificio icónico",a:"ING"},{t:"Escribir un libro o ganar un premio literario",a:"EDU"},{t:"Fundar tu propia empresa",a:"NEG"}]},
+  { texto:"¿Qué te genera más satisfacción?",
+    opciones:[{t:"Enseñar algo nuevo a alguien",a:"EDU"},{t:"Cocinar un plato delicioso para otros",a:"ALI"},{t:"Resolver un bug o problema informático",a:"TEC"},{t:"Defender una causa justa",a:"SOC"}]},
+  { texto:"¿Cuál de estos entornos de trabajo prefieres?",
+    opciones:[{t:"Laboratorio o centro de investigación",a:"CIE"},{t:"Hospital o consultorio",a:"SAL"},{t:"Oficina corporativa",a:"NEG"},{t:"Taller o sala de diseño",a:"ART"}]},
+  { texto:"¿Qué harías si tuvieras un día libre para aprender?",
+    opciones:[{t:"Aprender un nuevo lenguaje de programación",a:"TEC"},{t:"Tomar un curso de cocina gourmet",a:"ALI"},{t:"Estudiar un idioma extranjero",a:"EDU"},{t:"Aprender sobre leyes o derechos",a:"SOC"}]},
+  { texto:"¿Qué aspecto valoras más en una carrera?",
+    opciones:[{t:"Contribuir a la salud y bienestar de la sociedad",a:"SAL"},{t:"Ganar buen salario y estabilidad económica",a:"NEG"},{t:"Tener creatividad e innovación constante",a:"ART"},{t:"Entender cómo funciona el universo y la naturaleza",a:"CIE"}]},
+  { texto:"¿Qué tipo de película o serie prefieres?",
+    opciones:[{t:"Documentales de ciencia y tecnología",a:"CIE"},{t:"Series de crimen o drama legal",a:"SOC"},{t:"Documentales de cocina o gastronomía",a:"ALI"},{t:"Películas de superhéroes con efectos visuales",a:"ART"}]},
+  { texto:"¿Cómo te sientes trabajando con números?",
+    opciones:[{t:"Me encantan, son mi lenguaje natural",a:"TEC"},{t:"Los tolero si tienen aplicación práctica",a:"ING"},{t:"Prefiero trabajar con palabras y personas",a:"SOC"},{t:"Los uso para análisis de negocios",a:"NEG"}]},
+  { texto:"¿Cuál de estos proyectos te gustaría liderar?",
+    opciones:[{t:"Desarrollar un sistema de salud digital",a:"TEC"},{t:"Crear un restaurante o negocio gastronómico",a:"ALI"},{t:"Diseñar un plan de educación comunitaria",a:"EDU"},{t:"Construir un sistema de irrigación rural",a:"ING"}]},
+  { texto:"¿Qué habilidad social tienes más desarrollada?",
+    opciones:[{t:"Comunicarte y convencer a otros",a:"NEG"},{t:"Escuchar y comprender a las personas",a:"SOC"},{t:"Explicar temas complejos de forma sencilla",a:"EDU"},{t:"Trabajar en equipo en proyectos técnicos",a:"ING"}]},
+  { texto:"¿Cuál de estas situaciones te generaría más adrenalina positiva?",
+    opciones:[{t:"Atender a un paciente en urgencias",a:"SAL"},{t:"Presentar tu startup a inversores",a:"NEG"},{t:"Inaugurar una exposición de tu obra artística",a:"ART"},{t:"Lanzar tu primera aplicación al mercado",a:"TEC"}]},
+  { texto:"¿Cuál de estos temas te llama más la atención leer?",
+    opciones:[{t:"Avances en inteligencia artificial",a:"TEC"},{t:"Historia de grandes civilizaciones",a:"SOC"},{t:"Técnicas culinarias internacionales",a:"ALI"},{t:"Descubrimientos científicos recientes",a:"CIE"}]},
+  { texto:"¿Qué aspecto del medio ambiente te preocupa más?",
+    opciones:[{t:"La contaminación industrial y química",a:"CIE"},{t:"La falta de agua potable en comunidades",a:"ING"},{t:"La pérdida de cultura e identidad social",a:"SOC"},{t:"La mala gestión de recursos en empresas",a:"NEG"}]},
+  { texto:"¿Con qué frase te identificas más?",
+    opciones:[{t:"'La tecnología cambia el mundo'",a:"TEC"},{t:"'La salud es lo más importante'",a:"SAL"},{t:"'El arte habla donde las palabras fallan'",a:"ART"},{t:"'La educación transforma vidas'",a:"EDU"}]},
+  { texto:"¿Cuál de estas herramientas usas o usarías con más gusto?",
+    opciones:[{t:"Código o software de programación",a:"TEC"},{t:"Bisturí, microscopio o equipo médico",a:"SAL"},{t:"Pincel, tableta gráfica o cámara",a:"ART"},{t:"Planos, regla y compás de ingeniería",a:"ING"}]},
+  { texto:"¿Qué tipo de impacto quieres generar en tu comunidad?",
+    opciones:[{t:"Mejorar el acceso a la tecnología",a:"TEC"},{t:"Brindar atención médica de calidad",a:"SAL"},{t:"Defender los derechos de personas vulnerables",a:"SOC"},{t:"Crear oportunidades de negocio y empleo",a:"NEG"}]},
+  { texto:"¿Cuál de estas asignaturas llevarías como electiva?",
+    opciones:[{t:"Robótica y automatización",a:"ING"},{t:"Nutrición y dietética",a:"SAL"},{t:"Fotografía y diseño visual",a:"ART"},{t:"Economía y mercados financieros",a:"NEG"}]},
+  { texto:"¿Qué valoras más al elegir una carrera?",
+    opciones:[{t:"Tener impacto social real",a:"SOC"},{t:"Posibilidades de innovar y crear",a:"ART"},{t:"Estabilidad laboral y buenos ingresos",a:"NEG"},{t:"Aprender continuamente y hacer ciencia",a:"CIE"}]},
+  { texto:"¿Cuál de estos campos emergentes te emociona más?",
+    opciones:[{t:"Inteligencia artificial y big data",a:"TEC"},{t:"Medicina regenerativa y genómica",a:"SAL"},{t:"Gastronomía molecular y food design",a:"ALI"},{t:"Arquitectura sostenible y ecoconstrucción",a:"ING"}]},
+  { texto:"Si te pidieran organizar un evento, ¿qué rol tomarías?",
+    opciones:[{t:"Diseñar la decoración y la experiencia visual",a:"ART"},{t:"Coordinar el menú y la gastronomía",a:"ALI"},{t:"Manejar la logística y el presupuesto",a:"NEG"},{t:"Gestionar las redes sociales y comunicación",a:"SOC"}]},
+  { texto:"¿Cuál de estas frases describe mejor tu forma de aprender?",
+    opciones:[{t:"Aprendo haciendo y experimentando",a:"ING"},{t:"Aprendo leyendo y reflexionando",a:"EDU"},{t:"Aprendo observando y analizando datos",a:"CIE"},{t:"Aprendo interactuando con otras personas",a:"SOC"}]},
+  { texto:"¿Cuál de estos perfiles profesionales te atrae más?",
+    opciones:[{t:"Científico o investigador",a:"CIE"},{t:"Chef o sommelier",a:"ALI"},{t:"Maestro o comunicador",a:"EDU"},{t:"Juez o abogado",a:"SOC"}]},
+  { texto:"¿Qué imaginas haciendo a los 35 años?",
+    opciones:[{t:"Dirigiendo mi propia empresa tecnológica",a:"TEC"},{t:"Trabajando en un hospital o laboratorio",a:"SAL"},{t:"Enseñando en una universidad",a:"EDU"},{t:"Administrando un restaurante o negocio",a:"ALI"}]}
+];
+
+let testPregActual = 0;
+let testRespuestas = {};
+let testPuntos = {};
+
+function abrirTest(){
+  document.getElementById("testOverlay").classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+  testPregActual = 0; testRespuestas = {}; testPuntos = {};
+  renderTestWelcome();
+}
+function cerrarTest(){
+  document.getElementById("testOverlay").classList.add("hidden");
+  document.body.style.overflow = "";
+}
+
+function renderTestWelcome(){
+  const chips = [
+    {l:"💻 Tecnología",c:"#1565C0"},{l:"🏥 Salud",c:"#2E7D32"},
+    {l:"📊 Negocios",c:"#6A1B9A"},{l:"🎨 Arte",c:"#C62828"},
+    {l:"🤝 Social",c:"#00838F"},{l:"🔬 Ciencias",c:"#1B5E20"},
+    {l:"🍳 Gastronomía",c:"#B8860B"},{l:"📚 Educación",c:"#4527A0"},
+    {l:"⚙️ Ingeniería",c:"#E65100"}
+  ];
+  document.getElementById("testContenido").innerHTML = `
+    <div class="test-welcome">
+      <div class="test-welcome-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+      </div>
+      <h2>Test Vocacional ExploraU</h2>
+      <p>Responde <strong>${PREGUNTAS.length} preguntas</strong> sencillas y descubrirás las áreas profesionales que más se alinean con tu personalidad e intereses. Al final recibirás recomendaciones de carreras disponibles en Sucre.</p>
+      <div class="test-chips">
+        ${chips.map(c=>`<span class="test-chip" style="background:${c.c}">${c.l}</span>`).join('')}
+      </div>
+      <button class="test-start-btn" onclick="testIniciar()">🚀 Comenzar el Test</button>
+    </div>`;
+}
+
+function testIniciar(){
+  testPregActual = 0; testRespuestas = {}; testPuntos = {};
+  renderPregunta();
+}
+
+function renderPregunta(){
+  const total = PREGUNTAS.length;
+  const p = PREGUNTAS[testPregActual];
+  const pct = Math.round((testPregActual / total) * 100);
+  const letras = ['A','B','C','D','E'];
+  const seleccionada = testRespuestas[testPregActual];
+  document.getElementById("testContenido").innerHTML = `
+    <div class="test-q-wrap">
+      <div class="test-progress-bar-wrap">
+        <div class="test-progress-top">
+          <span class="test-prog-label">Progreso</span>
+          <span class="test-prog-num">${testPregActual + 1} / ${total}</span>
+        </div>
+        <div class="test-progress-bar">
+          <div class="test-progress-fill" style="width:${pct}%"></div>
+        </div>
+      </div>
+      <div class="test-q-body">
+        <div class="test-q-text">${testPregActual + 1}. ${p.texto}</div>
+        <div class="test-options">
+          ${p.opciones.map((op, i) => `
+            <button class="test-option ${seleccionada === i ? 'selected' : ''}" onclick="testSeleccionar(${i})">
+              <span class="test-option-letter">${letras[i]}</span>
+              <span class="test-option-txt">${op.t}</span>
+            </button>`).join('')}
+        </div>
+      </div>
+      <div class="test-q-footer">
+        <button class="test-nav-btn" onclick="testAnterior()" ${testPregActual === 0 ? 'disabled' : ''}>← Anterior</button>
+        ${testPregActual < total - 1
+          ? `<button class="test-nav-btn primary" onclick="testSiguiente()" ${seleccionada === undefined ? 'disabled' : ''}>Siguiente →</button>`
+          : `<button class="test-nav-btn primary" onclick="testFinalizar()" ${seleccionada === undefined ? 'disabled' : ''}>Ver Resultados ✦</button>`
+        }
+      </div>
+    </div>`;
+}
+
+function testSeleccionar(idx){
+  testRespuestas[testPregActual] = idx;
+  renderPregunta();
+}
+function testSiguiente(){
+  if(testRespuestas[testPregActual] === undefined) return;
+  testPregActual++;
+  renderPregunta();
+}
+function testAnterior(){
+  if(testPregActual > 0){ testPregActual--; renderPregunta(); }
+}
+
+function testFinalizar(){
+  // Calcular puntos
+  testPuntos = {};
+  PREGUNTAS.forEach((p, qi) => {
+    const respIdx = testRespuestas[qi];
+    if(respIdx !== undefined){
+      const area = p.opciones[respIdx].a;
+      testPuntos[area] = (testPuntos[area] || 0) + 1;
+    }
+  });
+  // Ordenar por puntuación
+  const sorted = Object.entries(testPuntos).sort((a,b)=>b[1]-a[1]);
+  const maxPts = sorted[0]?.[1] || 1;
+  const top3 = sorted.slice(0,3);
+  const total = PREGUNTAS.length;
+
+  const cardsHTML = top3.map(([areaKey, pts], rank) => {
+    const area = AREAS[areaKey];
+    if(!area) return '';
+    const pct = Math.round((pts / total) * 100);
+    const pillsHTML = area.carreras.map(c =>
+      `<span class="test-carrera-pill" style="background:${area.color}">${area.emoji} ${c.n} <span style="opacity:.75;font-size:.68rem;font-weight:400">· ${c.i}</span></span>`
+    ).join('');
+    return `
+      <div class="test-area-card">
+        <div class="test-area-header" style="background:${area.color}">
+          <div class="test-area-rank">#${rank+1}</div>
+          <div class="test-area-info">
+            <div class="test-area-nombre">${area.emoji} ${area.nombre}</div>
+            <div class="test-area-pct">${pts} coincidencias · ${pct}% afinidad</div>
+            <div class="test-area-bar-wrap"><div class="test-area-bar-fill" style="width:${pct}%"></div></div>
+          </div>
+        </div>
+        <div class="test-area-body">
+          <p class="test-area-desc">${area.desc}</p>
+          <div class="test-carreras-title">Carreras recomendadas en Sucre</div>
+          <div>${pillsHTML}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  document.getElementById("testContenido").innerHTML = `
+    <div class="test-results">
+      <div class="test-results-title">✦ Tu Perfil Vocacional</div>
+      <div class="test-results-sub">Estas son las 3 áreas con mayor afinidad según tus respuestas</div>
+      ${cardsHTML}
+      <button class="test-reiniciar" onclick="testIniciar()">↺ Repetir el Test</button>
+    </div>`;
 }
 </script>
 </body>
