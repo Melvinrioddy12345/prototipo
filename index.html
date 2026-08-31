@@ -61,6 +61,8 @@ body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(
 .boton-mapa{background:rgba(196,154,34,.9);color:#1E1510;border:1px solid rgba(255,255,255,.1);box-shadow:0 6px 20px rgba(196,154,34,.4)}
 .boton-inst-pub{background:rgba(14,90,80,.85);color:#FDFAF4;border:1px solid rgba(255,255,255,.1);box-shadow:0 6px 20px rgba(14,90,80,.4)}
 .boton-inst-priv{background:rgba(60,40,120,.85);color:#FDFAF4;border:1px solid rgba(255,255,255,.1);box-shadow:0 6px 20px rgba(60,40,120,.4)}
+.boton-cea{background:linear-gradient(135deg,rgba(109,40,217,.88),rgba(219,39,119,.85)) !important;color:#FDFAF4 !important;border:1px solid rgba(255,255,255,.18) !important;box-shadow:0 6px 28px rgba(109,40,217,.55) !important;position:relative}
+.boton-cea::before{content:'★ CEAs';position:absolute;top:5px;right:9px;font-size:.48rem;letter-spacing:1.5px;background:rgba(255,255,255,.22);padding:1px 7px;border-radius:8px;font-weight:900;color:white}
 .inicio-tag{margin-top:32px;font-size:.68rem;letter-spacing:2.5px;text-transform:uppercase;text-align:center;color:rgba(237,224,196,.35)}
 
 /* ── DARK TOGGLE FLOTANTE ── */
@@ -365,21 +367,161 @@ body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(
   .cea-intro{flex-direction:column;text-align:center;padding:20px}
   .cea-intro-stats{justify-content:center}
 }
+
+/* ── RESULTADOS TEST - INSTITUCIONES ── */
+.sw-inst-grid{display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.sw-inst-item{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-radius:10px;border:1px solid;transition:all .2s}
+.sw-inst-item:hover{transform:translateX(3px)}
+.sw-inst-info{flex:1;min-width:0}
+.sw-inst-carrera{font-size:.78rem;font-weight:700;color:rgba(230,220,255,.95);line-height:1.3}
+.sw-inst-meta{font-size:.68rem;color:rgba(180,170,220,.7);margin-top:2px}
+.sw-rank-carreras-label{font-size:.63rem;letter-spacing:2px;text-transform:uppercase;color:rgba(200,200,230,.4);font-weight:700;margin-bottom:8px;margin-top:14px}
+
+/* ══ FAB TEST ══ */
+.fab-test{
+  position:fixed;bottom:28px;right:28px;z-index:600;
+  display:flex;align-items:center;gap:10px;
+  padding:13px 22px;
+  background:linear-gradient(135deg,#7C3AED,#A855F7,#EC4899);
+  color:white;border:none;border-radius:50px;
+  font-family:'Lato',sans-serif;font-size:.8rem;font-weight:700;
+  letter-spacing:1.2px;text-transform:uppercase;
+  cursor:pointer;
+  box-shadow:0 6px 28px rgba(124,58,237,.55);
+  transition:transform .25s,box-shadow .25s;
+  animation:fabGlow 3s ease-in-out infinite;
+}
+.fab-test svg{width:20px;height:20px;flex-shrink:0}
+.fab-test:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 14px 36px rgba(124,58,237,.7)}
+.fab-test:active{transform:scale(.97)}
+.fab-badge{background:rgba(255,255,255,.25);font-size:.6rem;letter-spacing:1px;padding:2px 8px;border-radius:20px;font-weight:700}
+@keyframes fabGlow{
+  0%,100%{box-shadow:0 6px 28px rgba(124,58,237,.55)}
+  50%{box-shadow:0 6px 44px rgba(236,72,153,.7),0 0 0 10px rgba(124,58,237,.08)}
+}
+
+/* ══ MODAL TEST ══ */
+.test-overlay{position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;padding:16px;background:linear-gradient(135deg,rgba(17,4,40,.93),rgba(4,15,40,.93));backdrop-filter:blur(12px);animation:fadeIn .25s ease}
+.test-overlay.hidden{display:none}
+.test-modal{background:#12082e;border-radius:28px;width:100%;max-width:580px;max-height:93vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.07);position:relative;animation:slideIn .35s cubic-bezier(.34,1.56,.64,1)}
+.test-close{position:absolute;top:14px;right:14px;z-index:10;width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);cursor:pointer;display:flex;align-items:center;justify-content:center;color:rgba(200,200,230,.7);transition:all .2s}
+.test-close:hover{background:#7C3AED;color:white;border-color:#7C3AED}
+.test-close svg{width:16px;height:16px}
+
+/* ── BIENVENIDA ── */
+.sw-welcome{padding:36px 28px 30px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:13px;background:linear-gradient(160deg,#0f0622 0%,#1a0a3c 50%,#0a1535 100%);flex:1}
+.sw-welcome-glow{width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#EC4899);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 16px rgba(124,58,237,.12),0 0 40px rgba(236,72,153,.4);animation:iconPop .6s cubic-bezier(.34,1.56,.64,1)}
+@keyframes iconPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.sw-welcome-glow svg{width:38px;height:38px;fill:white}
+.sw-welcome h2{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:700;background:linear-gradient(90deg,#A78BFA,#F472B6,#60A5FA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2}
+.sw-welcome p{font-size:.84rem;color:rgba(200,200,230,.72);line-height:1.7;max-width:420px}
+.sw-info-row{display:flex;gap:22px;margin-top:4px}
+.sw-info-item{text-align:center}
+.sw-info-num{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:#A78BFA}
+.sw-info-label{font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(200,200,230,.45);margin-top:2px}
+.sw-area-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.sw-chip{padding:4px 12px;border-radius:20px;font-size:.68rem;font-weight:700;letter-spacing:.8px;color:white;backdrop-filter:blur(4px)}
+.sw-start-btn{margin-top:6px;padding:14px 44px;background:linear-gradient(135deg,#7C3AED,#A855F7,#EC4899);color:white;border:none;border-radius:50px;font-family:'Lato',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;box-shadow:0 8px 24px rgba(124,58,237,.5);transition:transform .2s,box-shadow .2s}
+.sw-start-btn:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(124,58,237,.65)}
+
+/* ── PREGUNTAS ── */
+.sw-header{padding:16px 20px 12px;background:linear-gradient(135deg,#0f0622,#1a0a3c);flex-shrink:0}
+.sw-top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.sw-counter{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;color:rgba(200,200,230,.9)}
+.sw-counter span{color:#A78BFA;font-size:1.2rem}
+.sw-skip-btn{padding:5px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:rgba(200,200,230,.6);font-family:'Lato',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.sw-skip-btn:hover{border-color:#7C3AED;color:#A78BFA}
+.sw-progress-segs{display:flex;gap:3px}
+.sw-seg{height:4px;border-radius:2px;flex:1;background:rgba(255,255,255,.1)}
+.sw-seg.done{background:linear-gradient(90deg,#7C3AED,#EC4899)}
+.sw-seg.active{background:linear-gradient(90deg,#A78BFA,#F472B6);animation:segPulse 1.2s ease-in-out infinite}
+@keyframes segPulse{0%,100%{opacity:1}50%{opacity:.55}}
+.sw-scene{flex:1;display:flex;flex-direction:column;align-items:center;padding:18px 18px 10px;background:linear-gradient(160deg,#0f0622 0%,#12082a 100%);overflow:hidden;position:relative;min-height:0}
+.sw-question{font-family:'Playfair Display',serif;font-size:1.02rem;font-weight:600;color:rgba(230,220,255,.95);text-align:center;line-height:1.55;margin-bottom:16px;padding:0 4px;max-width:500px;animation:qFadeIn .4s ease}
+@keyframes qFadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.sw-options-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%;max-width:500px;animation:qFadeIn .4s ease}
+.sw-opt{display:flex;align-items:flex-start;gap:10px;padding:12px 12px 12px 12px;border-radius:13px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);cursor:pointer;text-align:left;transition:all .22s cubic-bezier(.34,1.2,.64,1);color:rgba(220,210,255,.9);font-family:'Lato',sans-serif;font-size:.78rem;line-height:1.4;min-height:68px;position:relative;overflow:hidden;user-select:none}
+.sw-opt:hover{border-color:rgba(167,139,250,.5);background:rgba(124,58,237,.15);transform:translateY(-2px) scale(1.02);box-shadow:0 8px 24px rgba(124,58,237,.25)}
+.sw-opt.selected{border-color:#A78BFA;background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(236,72,153,.2));box-shadow:0 8px 24px rgba(124,58,237,.35);transform:scale(1.03)}
+.sw-opt.selected::after{content:'✓';position:absolute;top:7px;right:9px;font-size:.82rem;color:#A78BFA;font-weight:900}
+.sw-opt-ripple{position:absolute;inset:0;border-radius:13px;background:radial-gradient(circle at center,rgba(167,139,250,.3) 0%,transparent 70%);opacity:0;transition:opacity .3s;pointer-events:none}
+.sw-opt.selected .sw-opt-ripple{opacity:1}
+.sw-opt-letter{width:25px;height:25px;border-radius:50%;background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.3);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:900;color:#A78BFA;flex-shrink:0;transition:all .2s}
+.sw-opt.selected .sw-opt-letter{background:linear-gradient(135deg,#7C3AED,#EC4899);border-color:transparent;color:white}
+.sw-actions{display:flex;justify-content:space-between;align-items:center;padding:12px 18px 14px;background:rgba(10,4,25,.9);border-top:1px solid rgba(255,255,255,.07);flex-shrink:0}
+.sw-btn-back{display:flex;align-items:center;gap:6px;padding:9px 16px;border-radius:50px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:rgba(200,200,230,.6);font-family:'Lato',sans-serif;font-size:.73rem;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .2s}
+.sw-btn-back:hover{border-color:rgba(167,139,250,.4);color:#A78BFA}
+.sw-btn-back:disabled{opacity:.25;cursor:not-allowed}
+.sw-btn-back svg{width:14px;height:14px;fill:currentColor}
+.sw-btn-next{display:flex;align-items:center;gap:7px;padding:10px 26px;border-radius:50px;border:none;background:linear-gradient(135deg,#7C3AED,#A855F7,#EC4899);color:white;font-family:'Lato',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;box-shadow:0 6px 18px rgba(124,58,237,.45);transition:all .2s}
+.sw-btn-next:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(124,58,237,.6)}
+.sw-btn-next:disabled{opacity:.3;cursor:not-allowed;transform:none;box-shadow:none}
+@keyframes swipeRight{to{transform:translateX(140%) rotate(18deg);opacity:0}}
+
+/* ── RESULTADOS ── */
+.sw-results{flex:1;overflow-y:auto;padding:22px 20px;background:linear-gradient(160deg,#0f0622,#12082a)}
+.sw-results::-webkit-scrollbar{width:4px}
+.sw-results::-webkit-scrollbar-thumb{background:rgba(167,139,250,.4);border-radius:2px}
+.sw-results-hero{text-align:center;margin-bottom:22px}
+.sw-results-icon{font-size:2.8rem;margin-bottom:7px;animation:iconPop .5s cubic-bezier(.34,1.56,.64,1)}
+.sw-results-title{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:700;background:linear-gradient(90deg,#A78BFA,#F472B6,#60A5FA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.sw-results-sub{font-size:.75rem;color:rgba(200,200,230,.5)}
+.sw-rank-card{border-radius:18px;overflow:hidden;margin-bottom:14px;box-shadow:0 8px 28px rgba(0,0,0,.4);animation:cardEnter .5s cubic-bezier(.34,1.3,.64,1) both}
+@keyframes cardEnter{from{transform:scale(.85) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.sw-rank-head{padding:15px 17px;display:flex;align-items:center;gap:13px}
+.sw-rank-num{font-size:1.9rem;font-weight:900;color:rgba(255,255,255,.2);font-family:'Playfair Display',serif;flex-shrink:0;width:34px;text-align:center;line-height:1}
+.sw-rank-emoji{font-size:1.55rem;flex-shrink:0}
+.sw-rank-info{flex:1;min-width:0}
+.sw-rank-nombre{font-family:'Playfair Display',serif;font-size:.98rem;font-weight:700;color:white;line-height:1.2}
+.sw-rank-pct-wrap{display:flex;align-items:center;gap:8px;margin-top:6px}
+.sw-rank-bar{flex:1;height:5px;background:rgba(255,255,255,.2);border-radius:3px;overflow:hidden}
+.sw-rank-bar-fill{height:100%;background:rgba(255,255,255,.75);border-radius:3px;transition:width .7s ease}
+.sw-rank-pct-txt{font-size:.68rem;color:rgba(255,255,255,.75);font-weight:700;white-space:nowrap}
+.sw-rank-body{padding:14px 17px;background:rgba(255,255,255,.04);border-top:1px solid rgba(255,255,255,.07)}
+.sw-rank-desc{font-size:.78rem;color:rgba(200,200,230,.75);line-height:1.65;margin-bottom:12px}
+.sw-rank-carreras-label{font-size:.63rem;letter-spacing:2px;text-transform:uppercase;color:rgba(200,200,230,.4);font-weight:700;margin-bottom:8px}
+.sw-inst-grid{display:flex;flex-direction:column;gap:6px}
+.sw-inst-item{display:flex;align-items:flex-start;gap:9px;padding:9px 11px;border-radius:10px;border:1px solid;transition:all .2s}
+.sw-inst-item:hover{transform:translateX(3px)}
+.sw-inst-info{flex:1;min-width:0}
+.sw-inst-carrera{font-size:.77rem;font-weight:700;color:rgba(230,220,255,.95);line-height:1.3}
+.sw-inst-meta{font-size:.67rem;color:rgba(180,170,220,.65);margin-top:2px}
+.sw-restart{display:flex;align-items:center;justify-content:center;gap:8px;margin:16px auto 0;padding:10px 28px;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.14);color:rgba(200,200,230,.7);border-radius:50px;font-family:'Lato',sans-serif;font-size:.76rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.sw-restart:hover{background:rgba(124,58,237,.2);border-color:#7C3AED;color:#A78BFA}
+.sw-restart svg{width:14px;height:14px;fill:currentColor}
+@media(max-width:520px){.sw-options-grid{grid-template-columns:1fr}.sw-welcome{padding:24px 16px 20px}.sw-welcome h2{font-size:1.45rem}.sw-scene{padding:14px 12px 8px}.sw-actions{padding:10px 12px 12px}}
+
+/* ══ MAPA PESTAÑAS REDISEÑADAS ══ */
+.mapa-tabs-bar{display:flex;gap:0;margin-bottom:0;border-radius:var(--radius-md) var(--radius-md) 0 0;overflow:hidden;border:2px solid var(--border-color);border-bottom:none}
+.mapa-tab-btn{flex:1;padding:16px 18px;border:none;background:var(--card-bg);color:var(--muted);font-family:'Lato',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.8px;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:10px;position:relative}
+.mapa-tab-btn:not(:last-child){border-right:2px solid var(--border-color)}
+.mapa-tab-btn .tab-icon{font-size:1.15rem;line-height:1}
+.mapa-tab-btn .tab-txt{display:flex;flex-direction:column;align-items:flex-start;line-height:1.2}
+.mapa-tab-btn .tab-label{font-size:.8rem;font-weight:700}
+.mapa-tab-btn .tab-sub{font-size:.6rem;font-weight:400;opacity:.65;letter-spacing:.3px}
+.mapa-tab-btn .mapa-tab-count{background:var(--border-color);color:var(--muted);font-size:.6rem;font-weight:900;padding:2px 8px;border-radius:12px;letter-spacing:.5px;transition:all .3s}
+.mapa-tab-btn:not(.activo):hover{background:rgba(160,82,45,.06);color:var(--clay)}
+.mapa-tab-btn:not(.activo):hover .mapa-tab-count{background:rgba(160,82,45,.15);color:var(--clay)}
+/* Activo UNIVERSIDADES */
+.mapa-tab-btn.tab-uni.activo{background:linear-gradient(135deg,#1E1510 0%,#2d1f14 100%);color:#E8B84B;border-bottom:3px solid #C49A22}
+.mapa-tab-btn.tab-uni.activo .mapa-tab-count{background:rgba(196,154,34,.25);color:#E8B84B}
+.mapa-tab-btn.tab-uni.activo .tab-sub{color:rgba(232,184,75,.65)}
+/* Activo CEAs */
+.mapa-tab-btn.tab-cea.activo{background:linear-gradient(135deg,#071e1e 0%,#0a2e2d 100%);color:#7FFFD4;border-bottom:3px solid #0D5C5A}
+.mapa-tab-btn.tab-cea.activo .mapa-tab-count{background:rgba(13,92,90,.35);color:#7FFFD4}
+.mapa-tab-btn.tab-cea.activo .tab-sub{color:rgba(127,255,212,.6)}
+[data-theme="dark"] .mapa-tab-btn.tab-uni.activo{background:linear-gradient(135deg,#2a1f0a,#3d2e12)}
+[data-theme="dark"] .mapa-tab-btn.tab-cea.activo{background:linear-gradient(135deg,#0a2020,#0d3030)}
 </style>
 </head>
 <body>
 
 <!-- ══ INICIO ══ -->
 <div id="inicio">
-  <div class="inicio-topbar">
-    <button class="dark-toggle" onclick="toggleDark()" id="darkToggleInicio">
-      <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 100 18A9 9 0 0012 3zm0 16a7 7 0 010-14v14z"/></svg>
-      <span id="darkLabelInicio">Oscuro</span>
-    </button>
-  </div>
+  <!-- dark toggle solo en módulos interiores -->
   <div style="text-align:center">
     <div class="exploraedu-nombre">ExploraEDU</div>
-    <div class="exploraedu-tagline" id="txt-tagline">Guía Universitaria de Sucre</div>
+    <div class="exploraedu-tagline" id="txt-tagline">Educación Superior · Técnica · Alternativa</div>
   </div>
   <div class="divider-gold"><span>✦</span></div>
   <p class="inicio-pregunta">¿Qué deseas explorar?</p>
@@ -440,6 +582,23 @@ body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(
     </div>
     <div class="modal-tabs" id="modalTabs"></div>
     <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- ══ FAB TEST VOCACIONAL ══ -->
+<button class="fab-test" id="fabTest" onclick="abrirTest()">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+  <span>Test Vocacional</span>
+  <span class="fab-badge">¡Nuevo!</span>
+</button>
+
+<!-- ══ MODAL TEST VOCACIONAL ══ -->
+<div class="test-overlay hidden" id="testOverlay">
+  <div class="test-modal" id="testModal">
+    <button class="test-close" onclick="cerrarTest()">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <div id="testContenido"></div>
   </div>
 </div>
 
@@ -793,7 +952,7 @@ function descargarPlanPDF(){
     doc.setFont('helvetica','normal');
     doc.setFontSize(7.5);
     doc.setTextColor(150,140,130);
-    doc.text('ExploraEDU — Guía Universitaria de Sucre, Bolivia', margin, H-7);
+    doc.text('ExploraEDU — Educación Superior · Técnica · Alternativa en Sucre', margin, H-7);
     doc.text(`Página ${p} de ${totalPages}`, W-margin, H-7, {align:'right'});
   }
 
@@ -1069,11 +1228,21 @@ function mostrarMapa(){
   const tabBar=document.createElement("div");
   tabBar.className="mapa-tabs-bar";
   tabBar.innerHTML=`
-    <button class="mapa-tab-btn activo" id="tabMapaUni" onclick="switchMapaTab('uni')">
-      🏛 Universidades e Institutos
+    <button class="mapa-tab-btn tab-uni activo" id="tabMapaUni" onclick="switchMapaTab('uni')">
+      <span class="tab-icon">🏛</span>
+      <span class="tab-txt">
+        <span class="tab-label">Universidades e Institutos</span>
+        <span class="tab-sub">5 universidades · 12 institutos</span>
+      </span>
+      <span class="mapa-tab-count">17</span>
     </button>
-    <button class="mapa-tab-btn" id="tabMapaCea" onclick="switchMapaTab('cea')">
-      📚 CEAs
+    <button class="mapa-tab-btn tab-cea" id="tabMapaCea" onclick="switchMapaTab('cea')">
+      <span class="tab-icon">📚</span>
+      <span class="tab-txt">
+        <span class="tab-label">CEAs</span>
+        <span class="tab-sub">Educación Alternativa</span>
+      </span>
+      <span class="mapa-tab-count">12</span>
     </button>`;
   cont.appendChild(tabBar);
 
@@ -1131,21 +1300,59 @@ function mostrarMapa(){
       window._markersUni.push(m);
     });
 
-    // marcadores CEAs
+    // marcadores CEAs con logos
     window._markersCea=[];
     ceas.forEach((c,i)=>{
-      const ic=L.divIcon({className:'',
-        html:`<div class="marker-custom" style="border-color:#0D5C5A;display:none" id="mc-${i}"><img src="${c.logo}" onerror="this.parentElement.style.background='#0D5C5A';this.style.display='none'"></div>`,
-        iconSize:[48,48],iconAnchor:[24,24],popupAnchor:[0,-26]});
+      // Crear elemento del marcador con el logo del CEA
+      const markerHtml=`
+        <div style="
+          width:52px;height:52px;
+          border-radius:50%;
+          border:3px solid #0D5C5A;
+          background:white;
+          overflow:hidden;
+          box-shadow:0 4px 14px rgba(13,92,90,.5);
+          display:none;
+          cursor:pointer;
+        ">
+          <img src="${c.logo}"
+            style="width:100%;height:100%;object-fit:cover;display:block;border-radius:50%"
+            onerror="
+              this.style.display='none';
+              this.parentElement.style.background='linear-gradient(135deg,#0D5C5A,#0a8a80)';
+              this.parentElement.style.display='flex';
+              this.parentElement.style.alignItems='center';
+              this.parentElement.style.justifyContent='center';
+              this.parentElement.innerHTML='<span style=\'font-family:serif;font-size:16px;font-weight:700;color:white\'>${c.nombre.charAt(0)}</span>';
+            ">
+        </div>`;
+      const ic=L.divIcon({
+        className:'',
+        html:markerHtml,
+        iconSize:[52,52],
+        iconAnchor:[26,26],
+        popupAnchor:[0,-30]
+      });
       const m=L.marker(c.coords,{icon:ic})
         .addTo(mapInstance)
-        .bindPopup(`<strong style="font-family:'Playfair Display',serif;color:#0D5C5A">CEA</strong><br><small>${c.nombre}</small>`,{maxWidth:200})
+        .bindPopup(`
+          <div style="font-family:'Playfair Display',serif;font-weight:700;color:#0D5C5A;font-size:.92rem;margin-bottom:3px">📚 ${c.nombre}</div>
+          <div style="font-size:.72rem;color:#555;margin-bottom:5px">${c.carreras.length} carreras técnicas disponibles</div>
+          <div style="display:flex;flex-wrap:wrap;gap:3px">
+            ${c.carreras.slice(0,4).map(car=>`<span style="font-size:.62rem;padding:2px 6px;background:#0D5C5A18;color:#0D5C5A;border-radius:10px;font-weight:700">${car}</span>`).join('')}
+            ${c.carreras.length>4?`<span style="font-size:.62rem;padding:2px 6px;background:#0D5C5A18;color:#0D5C5A;border-radius:10px">+${c.carreras.length-4} más</span>`:''}
+          </div>
+        `,{maxWidth:250,className:'cea-popup'})
         .on("click",()=>seleccionarCEA(i));
-      // ocultar al inicio
-      m.getElement && setTimeout(()=>{
+      // Ocultar al inicio (solo se muestran en pestaña CEA)
+      setTimeout(()=>{
         const el=m.getElement();
-        if(el) el.style.display='none';
-      },300);
+        if(el){
+          const inner=el.querySelector('div');
+          if(inner) inner.style.display='none';
+          else el.style.display='none';
+        }
+      },400);
       window._markersCea.push(m);
     });
 
@@ -1158,10 +1365,12 @@ function switchMapaTab(tab){
   _mapaTabActual=tab;
   const isUni=tab==='uni';
 
-  // actualizar pestañas
-  document.getElementById("tabMapaUni").classList.toggle("activo",isUni);
-  document.getElementById("tabMapaCea").classList.toggle("activo",!isUni);
-  document.getElementById("mapaPanelTitle").textContent=isUni?"Universidades en Sucre":"CEAs en Sucre";
+  // actualizar pestañas con clases correctas
+  const btnUni=document.getElementById("tabMapaUni");
+  const btnCea=document.getElementById("tabMapaCea");
+  if(btnUni){ btnUni.classList.toggle("activo",isUni); }
+  if(btnCea){ btnCea.classList.toggle("activo",!isUni); }
+  document.getElementById("mapaPanelTitle").textContent=isUni?"Universidades e Institutos":"CEAs en Sucre";
 
   // mostrar/ocultar items lista
   document.querySelectorAll("[id^='item-uni-']").forEach(el=>el.style.display=isUni?'':'none');
@@ -1169,10 +1378,17 @@ function switchMapaTab(tab){
 
   // mostrar/ocultar marcadores en el mapa
   if(window._markersUni) window._markersUni.forEach(m=>{
-    const el=m.getElement();if(el)el.style.display=isUni?'':'none';
+    const el=m.getElement();
+    if(el) el.style.display=isUni?'':'none';
   });
   if(window._markersCea) window._markersCea.forEach(m=>{
-    const el=m.getElement();if(el)el.style.display=!isUni?'':'none';
+    const el=m.getElement();
+    if(el){
+      // el marcador CEA tiene un div hijo con display:none inicial
+      const inner=el.querySelector('div');
+      if(inner) inner.style.display=!isUni?'block':'none';
+      else el.style.display=!isUni?'':'none';
+    }
   });
 
   // limpiar panel info
@@ -1229,67 +1445,426 @@ function seleccionarCEA(idx){
 
 /* ══ TEST VOCACIONAL — SWIPE CARDS ══ */
 
-const AREAS = {
-  TEC:{nombre:"Tecnología e Informática",color:"#4F46E5",emoji:"💻",grad:"linear-gradient(135deg,#4F46E5,#7C3AED)",
-    desc:"Tienes afinidad por los sistemas, la lógica y la innovación digital. Te atrae resolver problemas con herramientas tecnológicas y construir soluciones que impacten miles de personas.",
-    carreras:[{n:"Ingeniería de Sistemas",i:"USFX / UPDS / UCB"},{n:"Ingeniería en Ciencias de la Computación",i:"USFX"},{n:"Ingeniería en Ciberseguridad",i:"USFX"},{n:"Sistemas Informáticos",i:"ITSEC / INFOCAL / ITEC"},{n:"Telecomunicaciones",i:"TECBA"}]},
-  ING:{nombre:"Ingeniería y Construcción",color:"#EA580C",emoji:"⚙️",grad:"linear-gradient(135deg,#EA580C,#F97316)",
-    desc:"Te inclinas por lo técnico, el diseño de estructuras y el trabajo con maquinaria. Disfrutas los retos físicos y la precisión matemática aplicada al mundo real.",
-    carreras:[{n:"Ingeniería Civil",i:"USFX / UNIVALLE / UPDS"},{n:"Ingeniería Mecánica / Mecatrónica",i:"USFX"},{n:"Ingeniería Eléctrica / Electrónica",i:"USFX / TESLAVI"},{n:"Ingeniería Industrial",i:"USFX / UPDS"},{n:"Construcción Civil",i:"TECBA"}]},
-  SAL:{nombre:"Salud y Ciencias Biomédicas",color:"#059669",emoji:"🏥",grad:"linear-gradient(135deg,#059669,#10B981)",
-    desc:"Sientes vocación de ayudar a los demás cuidando su salud. Te interesa la biología humana, la medicina y el bienestar de las personas.",
-    carreras:[{n:"Medicina",i:"USFX / UPDS / UBI"},{n:"Odontología",i:"USFX"},{n:"Enfermería",i:"USFX / ENTEC"},{n:"Kinesiología y Fisioterapia",i:"USFX / UPDS"},{n:"Farmacia y Bioquímica",i:"USFX"}]},
-  NEG:{nombre:"Negocios y Administración",color:"#7C3AED",emoji:"📊",grad:"linear-gradient(135deg,#7C3AED,#A855F7)",
-    desc:"Tu fuerte es organizar, liderar y tomar decisiones estratégicas. Disfrutas el mundo empresarial, las finanzas y el emprendimiento.",
-    carreras:[{n:"Administración de Empresas",i:"USFX / UNIVALLE / UCB"},{n:"Ingeniería Comercial",i:"USFX / UPDS / UNIVALLE"},{n:"Contaduría Pública",i:"USFX / UPDS"},{n:"Marketing y Publicidad",i:"UPDS / ITEC / TECBA"},{n:"Gestión Pública",i:"USFX"}]},
-  SOC:{nombre:"Ciencias Sociales y Humanas",color:"#0891B2",emoji:"🤝",grad:"linear-gradient(135deg,#0891B2,#06B6D4)",
-    desc:"Te apasiona entender a las personas, la sociedad y sus dinámicas. Valoras la justicia, la comunicación y el trabajo comunitario.",
-    carreras:[{n:"Derecho",i:"USFX / UNIVALLE / UPDS"},{n:"Psicología",i:"USFX / UNIVALLE / UPDS"},{n:"Trabajo Social",i:"USFX / UBI"},{n:"Sociología / Historia",i:"USFX"},{n:"Comunicación Social",i:"USFX"}]},
-  ART:{nombre:"Arte, Diseño y Creatividad",color:"#E11D48",emoji:"🎨",grad:"linear-gradient(135deg,#E11D48,#EC4899)",
-    desc:"Eres una persona visual y creativa. Disfrutas expresarte a través del arte, el diseño y la estética. Piensas en imágenes y formas.",
-    carreras:[{n:"Arquitectura",i:"USFX / UNIVALLE / UBI"},{n:"Diseño Gráfico / Multimedia",i:"USFX / ITEC / TECBA"},{n:"Arte y Diseño Gráfico",i:"USFX"},{n:"Diseño de Interiores",i:"USFX / TECBA"},{n:"Diseño Gráfico Multimedia",i:"ITEC"}]},
-  ALI:{nombre:"Gastronomía y Hotelería",color:"#B45309",emoji:"🍳",grad:"linear-gradient(135deg,#B45309,#D97706)",
-    desc:"Te entusiasma el mundo culinario, la hospitalidad y la creación de experiencias. Eres detallista y disfrutas trabajar con personas.",
-    carreras:[{n:"Gastronomía",i:"INFOCAL / IGA / ENTEC / USFX"},{n:"Pastelería y Panadería",i:"IGA"},{n:"Turismo y Hotelería",i:"USFX / ITSEC"},{n:"Turismo, Hotelería y Gestión Cultural",i:"USFX"}]},
-  CIE:{nombre:"Ciencias Exactas y Naturales",color:"#047857",emoji:"🔬",grad:"linear-gradient(135deg,#047857,#059669)",
-    desc:"Tu mente analítica disfruta los experimentos, las fórmulas y entender cómo funciona el mundo a nivel científico.",
-    carreras:[{n:"Ingeniería Química",i:"USFX"},{n:"Bioquímica / Biología",i:"USFX"},{n:"Ingeniería Ambiental",i:"USFX / UPDS"},{n:"Ingeniería en Biotecnología",i:"USFX"},{n:"Química Farmacéutica",i:"USFX"}]},
-  EDU:{nombre:"Educación e Idiomas",color:"#4338CA",emoji:"📚",grad:"linear-gradient(135deg,#4338CA,#6366F1)",
-    desc:"Tienes pasión por enseñar y comunicar. Disfrutas los idiomas, la pedagogía y ayudar a otros a aprender y crecer.",
-    carreras:[{n:"Pedagogía",i:"USFX"},{n:"Idiomas",i:"USFX"},{n:"Inglés",i:"CBA"},{n:"Parvulario",i:"ITARFA / INFOCAL / ENTEC"},{n:"Secretariado Ejecutivo",i:"ITSEC / ITARFA / CCA"}]}
+
+/* ══════════════════════════════════════════════════════
+   TEST VOCACIONAL ExploraEDU
+   Diseñado con criterios psicopedagógicos
+   Basado en Teoría de Holland (RIASEC) adaptada
+   al contexto educativo de Sucre, Bolivia
+══════════════════════════════════════════════════════ */
+
+const AREAS_TEST = {
+  TEC:{
+    nombre:"Tecnología e Informática",emoji:"💻",
+    grad:"linear-gradient(135deg,#1E3A8A,#3B82F6)",
+    color:"#1E3A8A",
+    desc:"Tu perfil muestra una fuerte inclinación hacia el pensamiento lógico, la resolución de problemas mediante algoritmos y el diseño de soluciones digitales. Disfrutas explorar cómo funcionan los sistemas y tienes facilidad para el razonamiento abstracto.",
+    instituciones:[
+      {tipo:"universidad",nombre:"Ingeniería de Sistemas",inst:"USFX",detalle:"5 años · Pública"},
+      {tipo:"universidad",nombre:"Ingeniería de Sistemas",inst:"UPDS",detalle:"Modular · Privada"},
+      {tipo:"universidad",nombre:"Ingeniería de Sistemas",inst:"UCB",detalle:"9 sem · Privada"},
+      {tipo:"universidad",nombre:"Ing. en Ciencias de la Computación",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Ingeniería en Ciberseguridad",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Ing. de Sistemas Informáticos",inst:"UNIVALLE",detalle:"9 sem"},
+      {tipo:"universidad",nombre:"Ingeniería de Sistemas TIC",inst:"UBI",detalle:"8 sem"},
+      {tipo:"instituto",nombre:"Sistemas Informáticos",inst:"ITSEC",detalle:"3 años"},
+      {tipo:"instituto",nombre:"Sistemas Informáticos",inst:"ITEC",detalle:"3 años"},
+      {tipo:"instituto",nombre:"Sistemas Informáticos",inst:"INFOCAL",detalle:"2 años"},
+      {tipo:"cea",nombre:"Sistemas Computacionales",inst:"CEA 8 de Septiembre",detalle:"2 años"},
+      {tipo:"cea",nombre:"Sistemas Computacionales",inst:"CEA Francisco Cermeño",detalle:"2 años"},
+    ]
+  },
+  ING:{
+    nombre:"Ingeniería y Construcción",emoji:"⚙️",
+    grad:"linear-gradient(135deg,#7C2D12,#EA580C)",
+    color:"#C2410C",
+    desc:"Posees una mente práctica y analítica orientada a construir y optimizar estructuras físicas y sistemas mecánicos. Tu perfil refleja habilidad espacial, precisión técnica y gusto por los desafíos de ingeniería.",
+    instituciones:[
+      {tipo:"universidad",nombre:"Ingeniería Civil",inst:"USFX",detalle:"5 años · Pública"},
+      {tipo:"universidad",nombre:"Ingeniería Civil",inst:"UNIVALLE",detalle:"10 sem"},
+      {tipo:"universidad",nombre:"Ingeniería Civil",inst:"UBI",detalle:"10 sem"},
+      {tipo:"universidad",nombre:"Ingeniería Industrial",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Ingeniería Industrial",inst:"UPDS",detalle:"Modular"},
+      {tipo:"universidad",nombre:"Ingeniería Mecánica",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Ingeniería Mecatrónica",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Ingeniería Ambiental",inst:"USFX",detalle:"5 años"},
+      {tipo:"instituto",nombre:"Mecánica Automotriz",inst:"INFOCAL",detalle:"2 años"},
+      {tipo:"instituto",nombre:"Mecánica Industrial",inst:"TESLAVI",detalle:"3 años"},
+      {tipo:"instituto",nombre:"Construcción Civil",inst:"TECBA",detalle:"3 años"},
+      {tipo:"cea",nombre:"Construcción Civil",inst:"CEA Azari",detalle:"2 años"},
+      {tipo:"cea",nombre:"Mecánica Automotriz",inst:"CEA Domingo Savio A",detalle:"2 años"},
+    ]
+  },
+  SAL:{
+    nombre:"Salud y Ciencias Biomédicas",emoji:"🏥",
+    grad:"linear-gradient(135deg,#14532D,#16A34A)",
+    color:"#15803D",
+    desc:"Manifiestas vocación de servicio hacia el cuidado de la salud humana. Tu perfil indica empatía, capacidad de observación clínica, tolerancia a situaciones de presión y motivación intrínseca por el bienestar ajeno.",
+    instituciones:[
+      {tipo:"universidad",nombre:"Medicina",inst:"USFX",detalle:"6 años · Pública"},
+      {tipo:"universidad",nombre:"Medicina",inst:"UPDS",detalle:"10 sem"},
+      {tipo:"universidad",nombre:"Medicina",inst:"UBI",detalle:"10 sem"},
+      {tipo:"universidad",nombre:"Odontología",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Enfermería",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Kinesiología y Fisioterapia",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Kinesiología y Fisioterapia",inst:"UPDS",detalle:"8 sem"},
+      {tipo:"universidad",nombre:"Farmacia y Bioquímica",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Nutrición y Dietética",inst:"USFX",detalle:"5 años"},
+      {tipo:"instituto",nombre:"Enfermería",inst:"ENTEC",detalle:"3 años"},
+      {tipo:"instituto",nombre:"Fisioterapia",inst:"TECBA",detalle:"3 años"},
+      {tipo:"cea",nombre:"Parvularia",inst:"CEA Azari",detalle:"2 años"},
+      {tipo:"cea",nombre:"Prótesis Dental",inst:"CEA Juana Azurduy de Padilla",detalle:"2 años"},
+    ]
+  },
+  NEG:{
+    nombre:"Negocios y Administración",emoji:"📊",
+    grad:"linear-gradient(135deg,#4C1D95,#7C3AED)",
+    color:"#6D28D9",
+    desc:"Tu perfil revela habilidades de liderazgo, pensamiento estratégico y orientación a resultados. Disfrutas organizar recursos, tomar decisiones bajo incertidumbre y generar valor económico a través de la gestión.",
+    instituciones:[
+      {tipo:"universidad",nombre:"Administración de Empresas",inst:"USFX",detalle:"5 años · Pública"},
+      {tipo:"universidad",nombre:"Administración de Empresas",inst:"UNIVALLE",detalle:"8 sem"},
+      {tipo:"universidad",nombre:"Ingeniería Comercial",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Ingeniería Comercial",inst:"UPDS",detalle:"Modular"},
+      {tipo:"universidad",nombre:"Contaduría Pública",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Contaduría Pública",inst:"UPDS",detalle:"Modular"},
+      {tipo:"universidad",nombre:"Marketing y Publicidad",inst:"UPDS",detalle:"Modular"},
+      {tipo:"universidad",nombre:"Economía",inst:"USFX",detalle:"5 años"},
+      {tipo:"instituto",nombre:"Administración de Empresas",inst:"ITTK",detalle:"3 años"},
+      {tipo:"instituto",nombre:"Contaduría General",inst:"ITSEC",detalle:"3 años"},
+      {tipo:"instituto",nombre:"Mercadotecnia",inst:"CCA",detalle:"3 años"},
+      {tipo:"instituto",nombre:"Negocios Digitales",inst:"TECBA",detalle:"3 años"},
+    ]
+  },
+  SOC:{
+    nombre:"Ciencias Sociales y Humanidades",emoji:"🤝",
+    grad:"linear-gradient(135deg,#0C4A6E,#0284C7)",
+    color:"#0369A1",
+    desc:"Posees sensibilidad social, capacidad de análisis crítico y vocación por transformar la sociedad. Tu perfil indica habilidades comunicativas, interés por la justicia y comprensión profunda de las dinámicas humanas.",
+    instituciones:[
+      {tipo:"universidad",nombre:"Derecho",inst:"USFX",detalle:"5 años · Pública"},
+      {tipo:"universidad",nombre:"Derecho",inst:"UNIVALLE",detalle:"10 sem"},
+      {tipo:"universidad",nombre:"Derecho",inst:"UPDS",detalle:"Modular"},
+      {tipo:"universidad",nombre:"Psicología",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Psicología",inst:"UNIVALLE",detalle:"9 sem"},
+      {tipo:"universidad",nombre:"Psicología",inst:"UPDS",detalle:"Modular"},
+      {tipo:"universidad",nombre:"Trabajo Social",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Sociología",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Comunicación Social",inst:"USFX",detalle:"5 años"},
+      {tipo:"instituto",nombre:"Secretariado Ejecutivo",inst:"ITSEC",detalle:"3 años"},
+      {tipo:"instituto",nombre:"Gestión Municipal",inst:"ITTK",detalle:"3 años"},
+      {tipo:"cea",nombre:"Secretariado Ejecutivo",inst:"CEA Joaquín Alonso",detalle:"2 años"},
+    ]
+  },
+  ART:{
+    nombre:"Arte, Diseño y Creatividad",emoji:"🎨",
+    grad:"linear-gradient(135deg,#881337,#E11D48)",
+    color:"#BE123C",
+    desc:"Tu perfil revela pensamiento divergente, sensibilidad estética y capacidad de expresión visual. Tienes facilidad para conceptualizar ideas en imágenes, formas y composiciones que comunican mensajes con impacto.",
+    instituciones:[
+      {tipo:"universidad",nombre:"Arquitectura",inst:"USFX",detalle:"5 años · Pública"},
+      {tipo:"universidad",nombre:"Arquitectura y Urbanismo",inst:"UNIVALLE",detalle:"10 sem"},
+      {tipo:"universidad",nombre:"Arquitectura y Urbanismo",inst:"UBI",detalle:"10 sem"},
+      {tipo:"universidad",nombre:"Arte y Diseño Gráfico",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Diseño de Interiores",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Ing. en Diseño y Animación Digital",inst:"USFX",detalle:"5 años"},
+      {tipo:"instituto",nombre:"Diseño Gráfico Multimedia",inst:"ITEC",detalle:"3 años"},
+      {tipo:"instituto",nombre:"Diseño Gráfico",inst:"TECBA",detalle:"3 años"},
+      {tipo:"instituto",nombre:"Diseño Multimedia",inst:"TECBA",detalle:"3 años"},
+      {tipo:"instituto",nombre:"Diseño de Interiores",inst:"TECBA",detalle:"3 años"},
+      {tipo:"cea",nombre:"Confección de Ropa Típica",inst:"CEA Acción Social C",detalle:"2 años"},
+      {tipo:"cea",nombre:"Tejido Industrial",inst:"CEA San Xavier C",detalle:"2 años"},
+    ]
+  },
+  ALI:{
+    nombre:"Gastronomía y Hotelería",emoji:"🍳",
+    grad:"linear-gradient(135deg,#78350F,#D97706)",
+    color:"#B45309",
+    desc:"Manifiestas creatividad culinaria, atención al detalle sensorial y vocación de hospitalidad. Tu perfil indica habilidad para combinar técnica con creatividad en la elaboración de experiencias gastronómicas memorables.",
+    instituciones:[
+      {tipo:"universidad",nombre:"Turismo, Hotelería y Gestión Cultural",inst:"USFX",detalle:"5 años · Pública"},
+      {tipo:"universidad",nombre:"Turismo",inst:"USFX",detalle:"5 años"},
+      {tipo:"instituto",nombre:"Gastronomía",inst:"IGA",detalle:"3 años"},
+      {tipo:"instituto",nombre:"Pastelería y Panadería",inst:"IGA",detalle:"3 años"},
+      {tipo:"instituto",nombre:"Gastronomía",inst:"INFOCAL",detalle:"2 años"},
+      {tipo:"instituto",nombre:"Gastronomía",inst:"ENTEC",detalle:"3 años"},
+      {tipo:"instituto",nombre:"Turismo",inst:"ITSEC",detalle:"3 años"},
+      {tipo:"cea",nombre:"Gastronomía y Alimentación",inst:"CEA 8 de Septiembre",detalle:"2 años"},
+      {tipo:"cea",nombre:"Gastronomía y Alimentación",inst:"CEA Azari",detalle:"2 años"},
+      {tipo:"cea",nombre:"Gastronomía y Alimentación",inst:"CEA San Roque",detalle:"2 años"},
+      {tipo:"cea",nombre:"Gastronomía y Alimentación",inst:"CEA Martha Mendoza",detalle:"2 años"},
+    ]
+  },
+  CIE:{
+    nombre:"Ciencias Exactas y Naturales",emoji:"🔬",
+    grad:"linear-gradient(135deg,#052e16,#16a34a)",
+    color:"#15803D",
+    desc:"Tu perfil evidencia pensamiento hipotético-deductivo, curiosidad científica y rigor metodológico. Disfrutas experimentar, formular hipótesis y construir modelos explicativos de los fenómenos naturales.",
+    instituciones:[
+      {tipo:"universidad",nombre:"Ingeniería Química",inst:"USFX",detalle:"5 años · Pública"},
+      {tipo:"universidad",nombre:"Bioquímica",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Farmacia y Bioquímica",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Biología",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Ingeniería Ambiental",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Ingeniería en Biotecnología",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Ingeniería de Alimentos",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Ingeniería Agronómica",inst:"USFX",detalle:"5 años"},
+      {tipo:"instituto",nombre:"Agroecología",inst:"ITTK",detalle:"3 años"},
+      {tipo:"cea",nombre:"Electricidad Industrial",inst:"CEA Azari",detalle:"2 años"},
+    ]
+  },
+  EDU:{
+    nombre:"Educación e Idiomas",emoji:"📚",
+    grad:"linear-gradient(135deg,#1e1b4b,#4338CA)",
+    color:"#3730A3",
+    desc:"Tu perfil refleja vocación pedagógica, empatía hacia el proceso de aprendizaje ajeno y habilidad comunicativa. Encuentras satisfacción en facilitar el desarrollo intelectual y personal de otros.",
+    instituciones:[
+      {tipo:"universidad",nombre:"Pedagogía",inst:"USFX",detalle:"5 años · Pública"},
+      {tipo:"universidad",nombre:"Idiomas",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Psicología Educativa",inst:"USFX",detalle:"5 años"},
+      {tipo:"universidad",nombre:"Trabajo Social",inst:"USFX",detalle:"5 años"},
+      {tipo:"instituto",nombre:"Inglés",inst:"CBA",detalle:"6 niveles"},
+      {tipo:"instituto",nombre:"Parvulario",inst:"ITARFA",detalle:"3 años"},
+      {tipo:"instituto",nombre:"Parvulario",inst:"INFOCAL",detalle:"2 años"},
+      {tipo:"instituto",nombre:"Parvulario",inst:"ENTEC",detalle:"3 años"},
+      {tipo:"cea",nombre:"Parvularia",inst:"CEA Azari",detalle:"2 años"},
+      {tipo:"cea",nombre:"Confección de Ropa Típica",inst:"CEA San Xavier C",detalle:"2 años"},
+    ]
+  }
 };
 
-const PREGUNTAS=[
-  {texto:"¿Qué actividad disfrutarías más en un proyecto escolar?",opciones:[{t:"Programar una app o página web",a:"TEC"},{t:"Construir una maqueta estructural",a:"ING"},{t:"Organizar el equipo y los recursos",a:"NEG"},{t:"Diseñar los carteles y la presentación",a:"ART"}]},
-  {texto:"Si pudieras elegir tu trabajo ideal, ¿cuál te emociona más?",opciones:[{t:"Trabajar en un hospital o clínica",a:"SAL"},{t:"Diseñar edificios o espacios",a:"ART"},{t:"Analizar datos y tomar decisiones de negocio",a:"NEG"},{t:"Investigar fenómenos químicos o biológicos",a:"CIE"}]},
-  {texto:"¿Cuál de estas materias te resulta más interesante?",opciones:[{t:"Matemáticas y lógica",a:"TEC"},{t:"Biología y ciencias naturales",a:"CIE"},{t:"Historia y ciencias sociales",a:"SOC"},{t:"Arte y expresión plástica",a:"ART"}]},
-  {texto:"¿Cómo prefieres resolver un problema complejo?",opciones:[{t:"Usando fórmulas y algoritmos",a:"TEC"},{t:"Hablando con personas involucradas",a:"SOC"},{t:"Dibujando o esquematizando",a:"ART"},{t:"Experimentando con materiales físicos",a:"ING"}]},
-  {texto:"¿Cuál de estas actividades harías en tu tiempo libre?",opciones:[{t:"Cocinar o explorar nuevas recetas",a:"ALI"},{t:"Leer libros de ciencia o tecnología",a:"CIE"},{t:"Escuchar o practicar idiomas",a:"EDU"},{t:"Diseñar logos o ilustraciones",a:"ART"}]},
-  {texto:"¿Qué tipo de personas admiras más?",opciones:[{t:"Médicos y enfermeros que salvan vidas",a:"SAL"},{t:"Ingenieros que construyen grandes obras",a:"ING"},{t:"Emprendedores exitosos",a:"NEG"},{t:"Artistas y creativos reconocidos",a:"ART"}]},
-  {texto:"Si trabajaras en una empresa, ¿qué área elegiría tu perfil?",opciones:[{t:"Tecnología y sistemas",a:"TEC"},{t:"Recursos humanos o comunicación",a:"SOC"},{t:"Contabilidad y finanzas",a:"NEG"},{t:"Marketing y diseño",a:"ART"}]},
-  {texto:"¿Qué habilidad tuya destacarían tus amigos?",opciones:[{t:"Eres muy organizado y líder",a:"NEG"},{t:"Eres empático y escuchas bien",a:"SOC"},{t:"Eres creativo e innovador",a:"ART"},{t:"Eres preciso y técnico",a:"ING"}]},
-  {texto:"¿Cuál de estos logros te llenaría más de orgullo?",opciones:[{t:"Crear una vacuna o tratamiento médico",a:"SAL"},{t:"Construir un puente o edificio icónico",a:"ING"},{t:"Escribir un libro o ganar un premio",a:"EDU"},{t:"Fundar tu propia empresa",a:"NEG"}]},
-  {texto:"¿Qué te genera más satisfacción?",opciones:[{t:"Enseñar algo nuevo a alguien",a:"EDU"},{t:"Cocinar un plato delicioso",a:"ALI"},{t:"Resolver un bug o problema informático",a:"TEC"},{t:"Defender una causa justa",a:"SOC"}]},
-  {texto:"¿Cuál de estos entornos de trabajo prefieres?",opciones:[{t:"Laboratorio o centro de investigación",a:"CIE"},{t:"Hospital o consultorio",a:"SAL"},{t:"Oficina corporativa",a:"NEG"},{t:"Taller o sala de diseño",a:"ART"}]},
-  {texto:"¿Qué harías si tuvieras un día libre para aprender?",opciones:[{t:"Aprender un nuevo lenguaje de programación",a:"TEC"},{t:"Tomar un curso de cocina gourmet",a:"ALI"},{t:"Estudiar un idioma extranjero",a:"EDU"},{t:"Aprender sobre leyes o derechos",a:"SOC"}]},
-  {texto:"¿Qué aspecto valoras más en una carrera?",opciones:[{t:"Contribuir a la salud de la sociedad",a:"SAL"},{t:"Ganar buen salario y estabilidad",a:"NEG"},{t:"Tener creatividad constante",a:"ART"},{t:"Entender cómo funciona la naturaleza",a:"CIE"}]},
-  {texto:"¿Cómo te sientes trabajando con números?",opciones:[{t:"Me encantan, son mi lenguaje natural",a:"TEC"},{t:"Los tolero si tienen aplicación práctica",a:"ING"},{t:"Prefiero trabajar con personas",a:"SOC"},{t:"Los uso para análisis de negocios",a:"NEG"}]},
-  {texto:"¿Cuál de estos proyectos te gustaría liderar?",opciones:[{t:"Desarrollar un sistema de salud digital",a:"TEC"},{t:"Crear un restaurante gastronómico",a:"ALI"},{t:"Diseñar un plan de educación comunitaria",a:"EDU"},{t:"Construir un sistema de irrigación rural",a:"ING"}]},
-  {texto:"¿Cuál de estas situaciones te genera más adrenalina positiva?",opciones:[{t:"Atender a un paciente en urgencias",a:"SAL"},{t:"Presentar tu startup a inversores",a:"NEG"},{t:"Inaugurar una exposición de tu obra artística",a:"ART"},{t:"Lanzar tu primera aplicación al mercado",a:"TEC"}]},
-  {texto:"¿Qué temas te llaman más la atención leer?",opciones:[{t:"Avances en inteligencia artificial",a:"TEC"},{t:"Historia de grandes civilizaciones",a:"SOC"},{t:"Técnicas culinarias internacionales",a:"ALI"},{t:"Descubrimientos científicos recientes",a:"CIE"}]},
-  {texto:"¿Con qué frase te identificas más?",opciones:[{t:"'La tecnología cambia el mundo'",a:"TEC"},{t:"'La salud es lo más importante'",a:"SAL"},{t:"'El arte habla donde las palabras fallan'",a:"ART"},{t:"'La educación transforma vidas'",a:"EDU"}]},
-  {texto:"¿Qué tipo de impacto quieres generar?",opciones:[{t:"Mejorar el acceso a la tecnología",a:"TEC"},{t:"Brindar atención médica de calidad",a:"SAL"},{t:"Defender derechos de personas vulnerables",a:"SOC"},{t:"Crear oportunidades de negocio y empleo",a:"NEG"}]},
-  {texto:"¿Cuál de estas asignaturas llevarías como electiva?",opciones:[{t:"Robótica y automatización",a:"ING"},{t:"Nutrición y dietética",a:"SAL"},{t:"Fotografía y diseño visual",a:"ART"},{t:"Economía y mercados financieros",a:"NEG"}]},
-  {texto:"¿Qué valoras más al elegir una carrera?",opciones:[{t:"Tener impacto social real",a:"SOC"},{t:"Posibilidades de innovar y crear",a:"ART"},{t:"Estabilidad laboral y buenos ingresos",a:"NEG"},{t:"Aprender continuamente y hacer ciencia",a:"CIE"}]},
-  {texto:"¿Cuál de estos campos emergentes te emociona más?",opciones:[{t:"Inteligencia artificial y big data",a:"TEC"},{t:"Medicina regenerativa y genómica",a:"SAL"},{t:"Gastronomía molecular y food design",a:"ALI"},{t:"Arquitectura sostenible y ecoconstrucción",a:"ING"}]},
-  {texto:"Si te pidieran organizar un evento, ¿qué rol tomarías?",opciones:[{t:"Diseñar la decoración y experiencia visual",a:"ART"},{t:"Coordinar el menú y la gastronomía",a:"ALI"},{t:"Manejar la logística y el presupuesto",a:"NEG"},{t:"Gestionar las redes sociales",a:"SOC"}]},
-  {texto:"¿Cuál de estas frases describe tu forma de aprender?",opciones:[{t:"Aprendo haciendo y experimentando",a:"ING"},{t:"Aprendo leyendo y reflexionando",a:"EDU"},{t:"Aprendo observando y analizando datos",a:"CIE"},{t:"Aprendo interactuando con otras personas",a:"SOC"}]},
-  {texto:"¿Qué imaginas haciendo a los 35 años?",opciones:[{t:"Dirigiendo mi propia empresa tecnológica",a:"TEC"},{t:"Trabajando en un hospital o laboratorio",a:"SAL"},{t:"Enseñando en una universidad",a:"EDU"},{t:"Administrando un restaurante o negocio",a:"ALI"}]}
+/* ── PREGUNTAS diseñadas con criterio psicopedagógico (Teoría Holland + Gardner) ── */
+const PREGUNTAS_TEST = [
+  {
+    texto:"Cuando enfrentas un problema complejo, ¿cuál es tu primera reacción espontánea?",
+    opciones:[
+      {t:"Busco un patrón lógico o una fórmula que lo explique",a:"TEC"},
+      {t:"Escucho a las personas involucradas para entender el contexto humano",a:"SOC"},
+      {t:"Imagino posibles soluciones y las represento visualmente",a:"ART"},
+      {t:"Analizo los recursos disponibles y organizo un plan de acción",a:"NEG"}
+    ]
+  },
+  {
+    texto:"¿Qué tipo de actividad te genera mayor sensación de logro personal?",
+    opciones:[
+      {t:"Construir o reparar algo con mis propias manos",a:"ING"},
+      {t:"Ayudar a alguien a superar una dificultad de salud o emocional",a:"SAL"},
+      {t:"Crear una receta, una obra visual o un diseño original",a:"ALI"},
+      {t:"Explicar un concepto complejo de manera que todos lo entiendan",a:"EDU"}
+    ]
+  },
+  {
+    texto:"Si tuvieras que describir tu forma de pensar predominante, ¿cuál elegiría?",
+    opciones:[
+      {t:"Analítico: descompongo situaciones en partes para entenderlas",a:"CIE"},
+      {t:"Estratégico: evalúo opciones y tomo decisiones orientadas a resultados",a:"NEG"},
+      {t:"Empático: percibo las emociones y necesidades de quienes me rodean",a:"SOC"},
+      {t:"Creativo: genero ideas originales y veo conexiones inesperadas",a:"ART"}
+    ]
+  },
+  {
+    texto:"¿Cuál de estas situaciones describirías como 'un día ideal de trabajo'?",
+    opciones:[
+      {t:"Desarrollar código o sistemas que solucionen problemas reales",a:"TEC"},
+      {t:"Diagnosticar y tratar a un paciente que mejora gracias a mi intervención",a:"SAL"},
+      {t:"Diseñar un espacio, una imagen o una propuesta visual innovadora",a:"ART"},
+      {t:"Negociar un contrato o presentar una estrategia empresarial exitosa",a:"NEG"}
+    ]
+  },
+  {
+    texto:"¿Qué habilidad consideras tu mayor fortaleza intelectual?",
+    opciones:[
+      {t:"Razonamiento matemático y lógico",a:"TEC"},
+      {t:"Comprensión lectora y expresión verbal",a:"EDU"},
+      {t:"Observación detallada y pensamiento espacial",a:"ART"},
+      {t:"Memoria procedimental y habilidad manual",a:"ING"}
+    ]
+  },
+  {
+    texto:"Cuando observas a alguien con una dificultad, ¿cuál es tu impulso más inmediato?",
+    opciones:[
+      {t:"Querer cuidar de su salud física o emocional",a:"SAL"},
+      {t:"Buscar una solución técnica que le facilite la vida",a:"TEC"},
+      {t:"Orientarle mediante conocimiento o experiencia",a:"EDU"},
+      {t:"Identificar una oportunidad de negocio o servicio",a:"NEG"}
+    ]
+  },
+  {
+    texto:"¿Cuál de estas materias te resultaba más significativa en la escuela?",
+    opciones:[
+      {t:"Matemáticas y física",a:"ING"},
+      {t:"Biología y química",a:"CIE"},
+      {t:"Ciencias sociales e historia",a:"SOC"},
+      {t:"Arte, música o educación física",a:"ART"}
+    ]
+  },
+  {
+    texto:"¿Qué tipo de entorno laboral te atrae más?",
+    opciones:[
+      {t:"Laboratorio, consultorio o centro hospitalario",a:"SAL"},
+      {t:"Oficina corporativa con metas y métricas claras",a:"NEG"},
+      {t:"Taller, cocina o espacio de creación práctica",a:"ALI"},
+      {t:"Al aire libre o en contacto con la naturaleza",a:"CIE"}
+    ]
+  },
+  {
+    texto:"¿Cuál de estas frases refleja mejor tu motivación profunda?",
+    opciones:[
+      {t:"'Quiero entender cómo funcionan las cosas'",a:"CIE"},
+      {t:"'Quiero construir algo que dure'",a:"ING"},
+      {t:"'Quiero ayudar a la gente a aprender y crecer'",a:"EDU"},
+      {t:"'Quiero crear algo hermoso y que emocione'",a:"ART"}
+    ]
+  },
+  {
+    texto:"Imagina que tienes un mes libre para aprender algo nuevo. ¿Qué elegiría tu intuición?",
+    opciones:[
+      {t:"Programación, inteligencia artificial o robótica",a:"TEC"},
+      {t:"Técnicas culinarias, coctelería o pastelería",a:"ALI"},
+      {t:"Un idioma extranjero o metodologías educativas",a:"EDU"},
+      {t:"Anatomía, primeros auxilios o nutrición",a:"SAL"}
+    ]
+  },
+  {
+    texto:"¿Cómo reaccionas ante la presión y los plazos ajustados?",
+    opciones:[
+      {t:"Me organizo sistemáticamente y proceso paso a paso",a:"TEC"},
+      {t:"Me adapto con flexibilidad y busco colaboración",a:"SOC"},
+      {t:"Tomo decisiones rápidas y me enfoco en el resultado",a:"NEG"},
+      {t:"Uso la presión como motor para producir creativamente",a:"ART"}
+    ]
+  },
+  {
+    texto:"¿Cuál de estos valores es el más importante para ti en tu futura profesión?",
+    opciones:[
+      {t:"Innovación tecnológica y avance científico",a:"TEC"},
+      {t:"Justicia social e igualdad de oportunidades",a:"SOC"},
+      {t:"Bienestar humano y cuidado de la salud",a:"SAL"},
+      {t:"Prosperidad económica y autonomía financiera",a:"NEG"}
+    ]
+  },
+  {
+    texto:"¿Qué tipo de proyecto escolar o personal disfrutaste más?",
+    opciones:[
+      {t:"Experimentos científicos o proyectos de laboratorio",a:"CIE"},
+      {t:"Exposiciones, debates o proyectos de investigación social",a:"SOC"},
+      {t:"Diseño de maquetas, dibujos técnicos o prototipos",a:"ING"},
+      {t:"Cocinar para otros, organizar eventos o decorar espacios",a:"ALI"}
+    ]
+  },
+  {
+    texto:"¿Qué capacidad te gustaría desarrollar más en tu vida profesional?",
+    opciones:[
+      {t:"Diagnóstico clínico y toma de decisiones médicas",a:"SAL"},
+      {t:"Liderazgo de equipos y gestión de proyectos",a:"NEG"},
+      {t:"Investigación científica y publicación académica",a:"CIE"},
+      {t:"Diseño gráfico, fotografía o producción audiovisual",a:"ART"}
+    ]
+  },
+  {
+    texto:"Cuando lees noticias, ¿qué tipo de contenido te genera más interés genuino?",
+    opciones:[
+      {t:"Avances tecnológicos y nuevas aplicaciones digitales",a:"TEC"},
+      {t:"Descubrimientos científicos o fenómenos naturales",a:"CIE"},
+      {t:"Conflictos sociales, derechos humanos y política",a:"SOC"},
+      {t:"Tendencias gastronómicas, culturales y de moda",a:"ALI"}
+    ]
+  },
+  {
+    texto:"¿Cómo prefieres tomar decisiones importantes?",
+    opciones:[
+      {t:"Analizando datos, evidencia y precedentes",a:"CIE"},
+      {t:"Consultando con personas de confianza y considerando el impacto humano",a:"SOC"},
+      {t:"Evaluando la viabilidad económica y el retorno esperado",a:"NEG"},
+      {t:"Siguiendo mi intuición y lo que me genera mayor entusiasmo",a:"ART"}
+    ]
+  },
+  {
+    texto:"¿Cuál de estos perfiles profesionales admiras más?",
+    opciones:[
+      {t:"Un ingeniero que diseña infraestructura vital para la comunidad",a:"ING"},
+      {t:"Un médico que trabaja en zonas de alta necesidad",a:"SAL"},
+      {t:"Un emprendedor que crea empleo y genera valor económico",a:"NEG"},
+      {t:"Un artista o chef que transforma materiales simples en experiencias",a:"ALI"}
+    ]
+  },
+  {
+    texto:"¿Qué aspecto del aprendizaje te resulta más satisfactorio?",
+    opciones:[
+      {t:"Comprender los principios subyacentes de un fenómeno",a:"CIE"},
+      {t:"Aplicar lo aprendido para resolver un problema real",a:"ING"},
+      {t:"Compartir el conocimiento con otros y verlos crecer",a:"EDU"},
+      {t:"Crear algo nuevo a partir de lo que aprendí",a:"ART"}
+    ]
+  },
+  {
+    texto:"¿Cuál de estas habilidades sociales describes como tuya?",
+    opciones:[
+      {t:"Escucha activa y contención emocional",a:"SAL"},
+      {t:"Persuasión, negociación y capacidad de convencer",a:"NEG"},
+      {t:"Mediación de conflictos y búsqueda de consenso",a:"SOC"},
+      {t:"Capacidad de enseñar con paciencia y claridad",a:"EDU"}
+    ]
+  },
+  {
+    texto:"¿Cuál sería tu reacción si tuvieras que trabajar en equipo durante un año?",
+    opciones:[
+      {t:"Me resultaría motivador si el equipo es diverso e innovador",a:"TEC"},
+      {t:"Lo disfrutaría si el objetivo tiene impacto social real",a:"SOC"},
+      {t:"Me adaptaría bien siempre que haya roles claros y metas definidas",a:"NEG"},
+      {t:"Lo valoraría especialmente si puedo aportar desde la creatividad",a:"ART"}
+    ]
+  },
+  {
+    texto:"¿Cuál de estos logros te generaría mayor orgullo personal?",
+    opciones:[
+      {t:"Patentar una tecnología o lanzar una aplicación propia",a:"TEC"},
+      {t:"Salvar una vida o mejorar la salud de una comunidad",a:"SAL"},
+      {t:"Inaugurar tu propio restaurante o recibir un reconocimiento culinario",a:"ALI"},
+      {t:"Ganar un concurso de diseño o exponer tu obra artística",a:"ART"}
+    ]
+  },
+  {
+    texto:"¿Qué tipo de libro o contenido te atraería leer voluntariamente?",
+    opciones:[
+      {t:"Biografías de científicos o libros de física y matemáticas",a:"CIE"},
+      {t:"Manuales de liderazgo, emprendimiento o finanzas",a:"NEG"},
+      {t:"Novelas históricas, filosofía o ensayos sociales",a:"SOC"},
+      {t:"Recetarios, guías de viaje o libros de diseño de interiores",a:"ALI"}
+    ]
+  },
+  {
+    texto:"¿Qué impacto deseas generar en la sociedad con tu carrera?",
+    opciones:[
+      {t:"Transformar la vida de las personas mediante la tecnología",a:"TEC"},
+      {t:"Construir infraestructura que mejore la calidad de vida",a:"ING"},
+      {t:"Contribuir a la equidad y justicia en mi comunidad",a:"SOC"},
+      {t:"Preservar la cultura y estimular la identidad boliviana",a:"ART"}
+    ]
+  },
+  {
+    texto:"¿Cómo te sientes ante la incertidumbre y los cambios inesperados?",
+    opciones:[
+      {t:"Los afronto con metodología y busco soluciones estructuradas",a:"TEC"},
+      {t:"Los vivo con calma y apoyo a quienes me rodean a procesarlos",a:"SAL"},
+      {t:"Los convierto en oportunidades de aprendizaje y enseñanza",a:"EDU"},
+      {t:"Los aprovecho para innovar y salir de la zona de confort",a:"ART"}
+    ]
+  },
+  {
+    texto:"Si pudieras elegir libremente tu ocupación ideal para los próximos 30 años, ¿cuál sería?",
+    opciones:[
+      {t:"Investigador científico o académico universitario",a:"CIE"},
+      {t:"Dueño de mi propio negocio o empresa en crecimiento",a:"NEG"},
+      {t:"Docente, orientador o trabajador comunitario",a:"EDU"},
+      {t:"Chef reconocido, sommelier o director de hotel",a:"ALI"}
+    ]
+  }
 ];
 
-/* ── Estado global del test ── */
+/* ── ESTADO DEL TEST ── */
 let swPregActual=0,swRespuestas={},swPuntos={},swAnimando=false;
-const LETRAS=['A','B','C','D'];
+const LETRAS_TEST=['A','B','C','D'];
 
 function abrirTest(){
   document.getElementById("testOverlay").classList.remove("hidden");
@@ -1304,28 +1879,29 @@ function cerrarTest(){
 
 function renderSwWelcome(){
   const chips=[
-    {l:"💻 Tecnología",c:"#4F46E5"},{l:"🏥 Salud",c:"#059669"},
-    {l:"📊 Negocios",c:"#7C3AED"},{l:"🎨 Arte",c:"#E11D48"},
-    {l:"🤝 Social",c:"#0891B2"},{l:"🔬 Ciencias",c:"#047857"},
-    {l:"🍳 Gastronomía",c:"#B45309"},{l:"📚 Educación",c:"#4338CA"},
-    {l:"⚙️ Ingeniería",c:"#EA580C"}
+    {l:"💻 Tecnología",c:"#1E3A8A"},{l:"🏥 Salud",c:"#15803D"},
+    {l:"📊 Negocios",c:"#6D28D9"},{l:"🎨 Arte & Diseño",c:"#BE123C"},
+    {l:"🤝 Social",c:"#0369A1"},{l:"🔬 Ciencias",c:"#065F46"},
+    {l:"🍳 Gastronomía",c:"#B45309"},{l:"📚 Educación",c:"#3730A3"},
+    {l:"⚙️ Ingeniería",c:"#C2410C"}
   ];
   document.getElementById("testContenido").innerHTML=`
     <div class="sw-welcome">
       <div class="sw-welcome-glow">
         <svg viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
       </div>
-      <h2>Test Vocacional</h2>
-      <p>Selecciona la opción que más se acerca a ti en cada pregunta. Al final descubrirás las carreras que mejor encajan con tu perfil.</p>
+      <h2>Test Vocacional ExploraEDU</h2>
+      <p>Este test fue diseñado con criterios psicopedagógicos basados en la <strong>Teoría de Holland</strong> y las <strong>Inteligencias Múltiples de Gardner</strong>, adaptado a la oferta educativa real de Sucre, Bolivia.</p>
       <div class="sw-info-row">
-        <div class="sw-info-item"><div class="sw-info-num">${PREGUNTAS.length}</div><div class="sw-info-label">Preguntas</div></div>
-        <div class="sw-info-item"><div class="sw-info-num">${Object.keys(AREAS).length}</div><div class="sw-info-label">Áreas</div></div>
-        <div class="sw-info-item"><div class="sw-info-num">~3'</div><div class="sw-info-label">Duración</div></div>
+        <div class="sw-info-item"><div class="sw-info-num">${PREGUNTAS_TEST.length}</div><div class="sw-info-label">Preguntas</div></div>
+        <div class="sw-info-item"><div class="sw-info-num">${Object.keys(AREAS_TEST).length}</div><div class="sw-info-label">Áreas</div></div>
+        <div class="sw-info-item"><div class="sw-info-num">~5'</div><div class="sw-info-label">Duración</div></div>
       </div>
       <div class="sw-area-chips">
-        ${chips.map(c=>`<span class="sw-chip" style="background:${c.c}20;border-color:${c.c}40;color:${c.c}">${c.l}</span>`).join('')}
+        ${chips.map(c=>`<span class="sw-chip" style="background:${c.c}25;border-color:${c.c}50;color:${c.c}">${c.l}</span>`).join('')}
       </div>
-      <button class="sw-start-btn" onclick="swIniciar()">✦ Comenzar</button>
+      <button class="sw-start-btn" onclick="swIniciar()">✦ Comenzar el Test</button>
+      <p style="font-size:.65rem;color:rgba(200,200,230,.4);letter-spacing:1px;margin-top:4px">Diseñado con criterio pedagógico y psicométrico</p>
     </div>`;
 }
 
@@ -1335,8 +1911,8 @@ function swIniciar(){
 }
 
 function renderSwPregunta(){
-  const total=PREGUNTAS.length;
-  const p=PREGUNTAS[swPregActual];
+  const total=PREGUNTAS_TEST.length;
+  const p=PREGUNTAS_TEST[swPregActual];
   const sel=swRespuestas[swPregActual];
   let segs='';
   for(let i=0;i<total;i++){
@@ -1348,18 +1924,18 @@ function renderSwPregunta(){
   const opts=p.opciones.map((op,i)=>`
     <button class="sw-opt${sel===i?' selected':''}" onclick="swSeleccionar(${i})">
       <div class="sw-opt-ripple"></div>
-      <span class="sw-opt-letter">${LETRAS[i]}</span>
+      <span class="sw-opt-letter">${LETRAS_TEST[i]}</span>
       ${op.t}
     </button>`).join('');
   const esUltima=swPregActual===total-1;
   const nextBtn=esUltima
-    ?`<button class="sw-btn-next" id="swBtnNext" onclick="swFinalizar()" ${sel===undefined?'disabled':''}>Ver resultados ✦</button>`
+    ?`<button class="sw-btn-next" id="swBtnNext" onclick="swFinalizar()" ${sel===undefined?'disabled':''}>Ver mi perfil vocacional ✦</button>`
     :`<button class="sw-btn-next" id="swBtnNext" onclick="swSiguiente()" ${sel===undefined?'disabled':''}>Siguiente <svg viewBox="0 0 24 24" fill="white" style="width:16px;height:16px;flex-shrink:0"><path d="M4 13h11.17l-5.59 5.59L11 20l8-8-8-8-1.41 1.41L15.17 11H4v2z"/></svg></button>`;
   document.getElementById("testContenido").innerHTML=`
     <div class="sw-header">
       <div class="sw-top-row">
         <div class="sw-counter">Pregunta <span>${swPregActual+1}</span> de ${total}</div>
-        <button class="sw-skip-btn" onclick="swSaltar()">Saltar →</button>
+        <button class="sw-skip-btn" onclick="swSaltar()">Omitir →</button>
       </div>
       <div class="sw-progress-segs">${segs}</div>
     </div>
@@ -1377,57 +1953,65 @@ function renderSwPregunta(){
 }
 
 function swSeleccionar(idx){
-  if(swAnimando) return;
+  if(swAnimando)return;
   swRespuestas[swPregActual]=idx;
   document.querySelectorAll(".sw-opt").forEach((el,i)=>el.classList.toggle("selected",i===idx));
   const btn=document.getElementById("swBtnNext");
-  if(btn) btn.disabled=false;
+  if(btn)btn.disabled=false;
   setTimeout(()=>{
-    if(swPregActual<PREGUNTAS.length-1) swSiguiente();
+    if(swPregActual<PREGUNTAS_TEST.length-1)swSiguiente();
     else swFinalizar();
   },480);
 }
 
 function swSiguiente(){
-  if(swAnimando||swRespuestas[swPregActual]===undefined) return;
+  if(swAnimando||swRespuestas[swPregActual]===undefined)return;
   swAnimarSalida(()=>{swPregActual++;renderSwPregunta();});
 }
 function swAnterior(){
-  if(swAnimando||swPregActual===0) return;
+  if(swAnimando||swPregActual===0)return;
   swPregActual--;renderSwPregunta();
 }
 function swSaltar(){
-  if(swAnimando) return;
-  if(swPregActual<PREGUNTAS.length-1){swAnimarSalida(()=>{swPregActual++;renderSwPregunta();});}
+  if(swAnimando)return;
+  if(swPregActual<PREGUNTAS_TEST.length-1){swAnimarSalida(()=>{swPregActual++;renderSwPregunta();});}
   else swFinalizar();
 }
-
 function swAnimarSalida(cb){
   swAnimando=true;
   const q=document.getElementById("swQ");
   const opts=document.getElementById("swOpts");
-  if(q) q.style.animation='swipeRight .28s ease forwards';
-  if(opts) opts.style.animation='swipeRight .28s ease forwards';
+  if(q)q.style.animation='swipeRight .28s ease forwards';
+  if(opts)opts.style.animation='swipeRight .28s ease forwards';
   setTimeout(()=>{swAnimando=false;cb();},300);
 }
 
 function swFinalizar(){
   swPuntos={};
-  PREGUNTAS.forEach((p,qi)=>{
+  PREGUNTAS_TEST.forEach((p,qi)=>{
     const ri=swRespuestas[qi];
     if(ri!==undefined){const a=p.opciones[ri].a;swPuntos[a]=(swPuntos[a]||0)+1;}
   });
   const sorted=Object.entries(swPuntos).sort((a,b)=>b[1]-a[1]);
   const top3=sorted.slice(0,3);
-  const total=PREGUNTAS.length;
+  const total=Object.values(swPuntos).reduce((s,v)=>s+v,0)||1;
   const medallas=['🥇','🥈','🥉'];
+  const tipoIcono={universidad:'🎓',instituto:'🏫',cea:'📚'};
+  const tipoColor={universidad:'#1E3A8A',instituto:'#7C2D12',cea:'#0D5C5A'};
+  const tipoBg={universidad:'rgba(30,58,138,.1)',instituto:'rgba(124,45,18,.1)',cea:'rgba(13,92,90,.1)'};
+
   const cardsHTML=top3.map(([key,pts],rank)=>{
-    const area=AREAS[key];if(!area)return'';
+    const area=AREAS_TEST[key];if(!area)return'';
     const pct=Math.round((pts/total)*100);
-    const pills=area.carreras.map(c=>
-      `<span class="sw-rank-pill" style="background:${area.color}22;border:1px solid ${area.color}44;color:${area.color}">${area.emoji} ${c.n} <small>· ${c.i}</small></span>`
-    ).join('');
-    return `<div class="sw-rank-card">
+    const instHTML=area.instituciones.map(i=>`
+      <div class="sw-inst-item" style="background:${tipoBg[i.tipo]};border-color:${tipoColor[i.tipo]}30">
+        <span style="font-size:.9rem">${tipoIcono[i.tipo]}</span>
+        <div class="sw-inst-info">
+          <div class="sw-inst-carrera">${i.nombre}</div>
+          <div class="sw-inst-meta"><strong style="color:${tipoColor[i.tipo]}">${i.inst}</strong> · ${i.detalle}</div>
+        </div>
+      </div>`).join('');
+    return`<div class="sw-rank-card" style="animation-delay:${rank*.12}s">
       <div class="sw-rank-head" style="background:${area.grad}">
         <div class="sw-rank-num">${medallas[rank]}</div>
         <div class="sw-rank-emoji">${area.emoji}</div>
@@ -1441,25 +2025,30 @@ function swFinalizar(){
       </div>
       <div class="sw-rank-body">
         <p class="sw-rank-desc">${area.desc}</p>
-        <div class="sw-rank-carreras-label">Carreras recomendadas en Sucre</div>
-        <div class="sw-rank-pills">${pills}</div>
+        <div class="sw-rank-carreras-label">Instituciones recomendadas en Sucre</div>
+        <div class="sw-inst-grid">${instHTML}</div>
       </div>
     </div>`;
   }).join('');
+
   document.getElementById("testContenido").innerHTML=`
     <div class="sw-results">
       <div class="sw-results-hero">
         <div class="sw-results-icon">🎯</div>
         <div class="sw-results-title">Tu Perfil Vocacional</div>
-        <div class="sw-results-sub">Top 3 áreas · ${total} preguntas completadas</div>
+        <div class="sw-results-sub">Basado en ${total} respuestas · Criterio psicopedagógico Holland-Gardner</div>
       </div>
       ${cardsHTML}
+      <div style="background:rgba(255,255,255,.04);border-radius:14px;padding:16px 18px;margin-top:16px;border:1px solid rgba(255,255,255,.08)">
+        <p style="font-size:.72rem;color:rgba(200,200,230,.5);line-height:1.7;text-align:center">⚠️ Este test es una herramienta de orientación complementaria. Los resultados deben interpretarse junto a un orientador vocacional o psicólogo educativo para una decisión informada.</p>
+      </div>
       <button class="sw-restart" onclick="swIniciar()">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
         Repetir el test
       </button>
     </div>`;
 }
+
 </script>
 </body>
 </html>
